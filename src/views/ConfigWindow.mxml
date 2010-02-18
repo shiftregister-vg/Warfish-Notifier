@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Window xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		  xmlns:s="library://ns.adobe.com/flex/spark" 
+		  xmlns:mx="library://ns.adobe.com/flex/mx" width="300" height="100"
+		  creationComplete="onCreationComplete()" type="utility" showStatusBar="false" title="Warfish Notifier Configuration">
+	<s:layout>
+		<s:VerticalLayout horizontalAlign="left" paddingLeft="10" paddingRight="10" paddingTop="10"/>
+	</s:layout>
+
+	<fx:Script>
+		<![CDATA[
+			import flash.events.MouseEvent;
+			import vo.WarfishConfig;
+			
+			[Bindable] public var warfishConfig:WarfishConfig;
+			
+			private function onCreationComplete():void{
+				
+			}
+			
+			protected function btn_saveSettings_clickHandler(event:Event):void{
+				warfishConfig.rssURL = ti_rssURL.text;
+				this.close();
+			}
+		]]>
+	</fx:Script>
+	
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	<mx:Form width="100%" height="100%">
+		<mx:FormItem label="RSS URL" width="100%">
+			<s:TextInput id="ti_rssURL" width="100%" text="{warfishConfig.rssURL}" enter="btn_saveSettings_clickHandler(event)"/>
+		</mx:FormItem>
+	</mx:Form>
+	<s:HGroup width="100%" height="100%">
+		<s:Button id="btn_saveSettings" label="Save Settings" click="btn_saveSettings_clickHandler(event)" />
+		<s:Button label="Cancel" click="this.close()"/>
+	</s:HGroup>
+	
+</s:Window>

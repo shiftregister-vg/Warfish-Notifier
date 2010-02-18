@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009" 
+					   xmlns:s="library://ns.adobe.com/flex/spark" 
+					   xmlns:mx="library://ns.adobe.com/flex/mx"
+					   creationComplete="onCreationComplete()">
+	
+	<fx:Script>
+		<![CDATA[
+			import flash.display.NativeMenuItem;
+			import flash.events.Event;
+			import flash.media.Sound;
+			import flash.media.SoundChannel;
+			import flash.media.SoundMixer;
+			import flash.media.SoundTransform;
+			import flash.net.URLLoader;
+			import flash.net.URLRequest;
+			import flash.net.URLRequestMethod;
+			import flash.utils.clearInterval;
+			import flash.utils.setInterval;
+			
+			import views.ConfigWindow;
+			
+			import vo.WarfishConfig;
+			
+			private var configWindow:ConfigWindow;
+			private var icon:Loader = new Loader();
+			private var iconMenu:NativeMenu = new NativeMenu();
+			private var interval:int;
+			private var rssXML:XML;
+			[Bindable][Embed(source="/assets/sound/take-your-damn-warfish-turn.mp3")]
+			private var alertSoundClass:Class;
+			private var soundEmbed:Sound = new alertSoundClass() as Sound;
+			private var soundChannel:SoundChannel;
+			
+			[Bindable] private var warfishConfig:WarfishConfig = new WarfishConfig();
+			
+			private function onCreationComplete():void{
+				try {
+					NativeApplication.nativeApplication.startAtLogin = true;
+				} catch (e:Error) {}
+				NativeApplication.nativeApplication.autoExit = false;
+				
+				var configCommand:NativeMenuItem = iconMenu.addItem(new NativeMenuItem("Configure"));
+					configCommand.addEventListener(Event.SELECT,onConfigSelect);
+				
+				var exitCommand:NativeMenuItem = iconMenu.addItem(new NativeMenuItem("Exit"));
+					exitCommand.addEventListener(Event.SELECT,onExitSelect);
+				
+				setIcon();
+				playSound();
+				startInterval();
+				
+				if (!warfishConfig.rssURL.length){
+					onConfigSelect();
+				}
+			}
+			
+			private function iconLoadComplete(event:Event):void {
+				NativeApplication.nativeApplication.icon.bitmaps =
+					[event.target.content.bitmapData];
+			}
+			
+			private function onConfigSelect(event:Event=null):void{
+				if (!configWindow || configWindow.closed){
+					configWindow = new ConfigWindow();
+				}
+				
+				configWindow.warfishConfig = warfishConfig;
+				configWindow.addEventListener(Event.CLOSE,onConfigWindowClose);
+				configWindow.open();
+				configWindow.activate();
+			}
+			
+			private function onConfigWindowClose(event:Event):void{
+				startInterval();
+			}
+			
+			private function onExitSelect(event:Event):void{
+				NativeApplication.nativeApplication.icon.bitmaps = [];
+				NativeApplication.nativeApplication.exit();
+			}
+			
+			private function startInterval():void{
+				if (interval){
+					clearInterval(interval);
+				}
+				if (warfishConfig.rssURL.length){
+					interval = setInterval(onTick,30000);
+				}
+			}
+			
+			private function onTick():void{
+				var urlRequest:URLRequest = new URLRequest(warfishConfig.rssURL);
+					urlRequest.contentType = "text/xml";
+					urlRequest.method = URLRequestMethod.GET;
+				var loader:URLLoader = new URLLoader();
+					loader.addEventListener(Event.COMPLETE,onRequestComplete);
+					loader.load(urlRequest);
+			}
+			
+			private function onRequestComplete(event:Event):void{
+				var loader:URLLoader = URLLoader(event.target);
+				rssXML = XML(loader.data);
+				
+				var isTurn:Boolean = false;
+				if (rssXML..item.length() > 1){
+					isTurn = true;
+				}
+				
+				if (!isTurn){
+					setIcon();
+				} else {
+					setIcon("-red"," - It's your turn!");
+					playSound();
+				}
+			}
+			
+			private function setIcon(iconName:String="",tooltip:String=""):void{
+				if (NativeApplication.supportsSystemTrayIcon) {
+					NativeApplication.nativeApplication.autoExit = false;
+					icon.contentLoaderInfo.addEventListener(Event.COMPLETE, iconLoadComplete);
+					icon.load(new URLRequest("assets/icon/warfish" + iconName + "-16.png"));
+					
+					var systray:SystemTrayIcon = NativeApplication.nativeApplication.icon as SystemTrayIcon;
+					systray.tooltip = "Warfish Notifier" + tooltip;
+					systray.menu = iconMenu;
+				}
+				
+				if (NativeApplication.supportsDockIcon){
+					icon.contentLoaderInfo.addEventListener(Event.COMPLETE,iconLoadComplete);
+					icon.load(new URLRequest("assets/icon/warfish" + iconName + "-128.png"));
+					var dock:DockIcon = NativeApplication.nativeApplication.icon as DockIcon; 
+					dock.menu = iconMenu;
+				}
+			}
+			
+			private function generateRandomNumber( start:Number, end:Number ):Number
+			{
+				var randomNum:Number;
+				if( end == 1 ){
+					randomNum = Math.random();
+				} else {
+					randomNum = Math.round( Math.random() * end );
+				}
+				return randomNum;
+			}
+			
+			private function playSound():void{
+				SoundMixer.soundTransform = new SoundTransform(1);
+				soundChannel = soundEmbed.play();
+			}
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+	</fx:Declarations>
+</s:Application>
