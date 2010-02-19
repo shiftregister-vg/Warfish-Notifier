@@ -18,6 +18,9 @@
 			import flash.utils.clearInterval;
 			import flash.utils.setInterval;
 			
+			import mx.events.AIREvent;
+			
+			import views.AlertBubble;
 			import views.ConfigWindow;
 			
 			import vo.WarfishConfig;
@@ -26,6 +29,7 @@
 			private var icon:Loader = new Loader();
 			private var iconMenu:NativeMenu = new NativeMenu();
 			private var interval:int;
+			private var bubbleInterval:int;
 			private var rssXML:XML;
 			[Bindable][Embed(source="/assets/sound/take-your-damn-warfish-turn.mp3")]
 			private var alertSoundClass:Class;
@@ -46,6 +50,7 @@
 				var exitCommand:NativeMenuItem = iconMenu.addItem(new NativeMenuItem("Exit"));
 					exitCommand.addEventListener(Event.SELECT,onExitSelect);
 				
+					
 				setIcon();
 				playSound();
 				startInterval();
@@ -109,9 +114,15 @@
 				
 				if (!isTurn){
 					setIcon();
+					if (bubbleInterval){
+						clearInterval(bubbleInterval);
+					}
 				} else {
 					setIcon("-red"," - It's your turn!");
-					playSound();
+					if (!bubbleInterval){
+						showAlert();
+						bubbleInterval = setInterval(showAlert,600000);
+					}
 				}
 			}
 			
@@ -134,20 +145,19 @@
 				}
 			}
 			
-			private function generateRandomNumber( start:Number, end:Number ):Number
-			{
-				var randomNum:Number;
-				if( end == 1 ){
-					randomNum = Math.random();
-				} else {
-					randomNum = Math.round( Math.random() * end );
-				}
-				return randomNum;
-			}
-			
-			private function playSound():void{
+			private function playSound(event:Event=null):void{
 				SoundMixer.soundTransform = new SoundTransform(1);
 				soundChannel = soundEmbed.play();
+			}
+			
+			private function showAlert():void{
+				if (bubbleInterval){
+					clearInterval(bubbleInterval);
+				}
+				var alertBubble:AlertBubble = new AlertBubble();
+					alertBubble.addEventListener(AIREvent.WINDOW_ACTIVATE,playSound);
+					alertBubble.open();
+					alertBubble.activate();
 			}
 		]]>
 	</fx:Script>

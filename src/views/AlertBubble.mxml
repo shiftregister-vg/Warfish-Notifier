@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Window xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		  xmlns:s="library://ns.adobe.com/flex/spark" 
+		  xmlns:mx="library://ns.adobe.com/flex/mx"
+		  width="335" height="25" showStatusBar="false" alwaysInFront="true"
+		  backgroundColor="#3D004F" backgroundAlpha="0.65" creationComplete="init()"
+		  color="#FFFFFF" type="lightweight" systemChrome="none" transparent="true">
+	
+	<fx:Script>
+		<![CDATA[
+			import flash.events.Event;
+			import flash.events.MouseEvent;
+			import flash.utils.setTimeout;
+			
+			private function init():void{
+				var timer:int = setTimeout(closeBubble,10000);
+				nativeWindow.x = ( Screen.mainScreen.bounds.width - 340 );
+				nativeWindow.y = ( Screen.mainScreen.bounds.height - 75 );
+				this.addEventListener(MouseEvent.CLICK,closeBubble);
+			}
+			
+			private function closeBubble(event:Event=null):void{
+				this.close();
+			}
+		]]>
+	</fx:Script>
+	
+	<s:layout>
+		<s:HorizontalLayout paddingLeft="5" paddingRight="5" paddingTop="5" paddingBottom="5" verticalAlign="middle" horizontalAlign="center"/>
+	</s:layout>
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	<s:Label id="noteLabel" text="It's your turn in one or more Warfish games!" fontWeight="bold" fontSize="13" fontFamily="Verdana"/>
+</s:Window>
