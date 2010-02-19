@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<application>
+	<name>Warfish Turn Notifier</name>
+	<version>1.0</version>
+	<url>
+		<home>http://lanctr.com/</home>
+		<download>http://update.slantsoft.com/warfishnotification/WarfishTurnNotification-1.0.air</download>
+	</url>
+	<release>
+		<date>02/18/2010</date>
+		<notes>Initial release. Parses turns RSS feed and alerts the user when they have turns in one or more games. Polls RSS every 30 seconds. Turn notification bubble will continue to popup every ten minutes until turns are taken. Icon turns red while user has turns to play.</notes>
+	</release>
+</application>
