@@ -43,9 +43,7 @@
 			[Bindable] private var warfishConfig:WarfishConfig = new WarfishConfig();
 			
 			private function onCreationComplete():void{
-				try {
-					NativeApplication.nativeApplication.startAtLogin = warfishConfig.startOnLogin;
-				} catch (e:Error) {}
+				setAutoLoad();
 				NativeApplication.nativeApplication.autoExit = false;
 				
 				var websiteCommand:NativeMenuItem = iconMenu.addItem(new NativeMenuItem("Open Warfish"));
@@ -63,6 +61,11 @@
 				var exitCommand:NativeMenuItem = iconMenu.addItem(new NativeMenuItem("Exit"));
 					exitCommand.addEventListener(Event.SELECT,onExitSelect);
 					
+				var bottomSeperator:NativeMenuItem = iconMenu.addItem(new NativeMenuItem("",true));
+				
+				var versionMenu:NativeMenuItem = iconMenu.addItem(new NativeMenuItem("Version " + getAppVersion()));
+					versionMenu.enabled = false;
+					
 				setIcon();
 				playSound();
 				startInterval();
@@ -74,6 +77,19 @@
 				var updateManager:UpdateManager = new UpdateManager();
 					updateManager.manifestURL = "http://update.slantsoft.com/warfishnotification/manifest.xml";
 					updateManager.checkForUpdate();
+			}
+			
+			private function getAppVersion():String {
+				var appXml:XML = NativeApplication.nativeApplication.applicationDescriptor;
+				var ns:Namespace = appXml.namespace();
+				var appVersion:String = appXml.ns::version[0];
+				return appVersion;
+			}
+			
+			private function setAutoLoad():void{
+				try {
+					NativeApplication.nativeApplication.startAtLogin = warfishConfig.startOnLogin;
+				} catch (e:Error) {}
 			}
 			
 			private function iconLoadComplete(event:Event):void {
@@ -102,6 +118,7 @@
 			}
 			
 			private function onConfigWindowClose(event:Event):void{
+				setAutoLoad();
 				startInterval();
 			}
 			
