@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:Window xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		  xmlns:s="library://ns.adobe.com/flex/spark" 
-		  xmlns:mx="library://ns.adobe.com/flex/mx" width="300" height="125"
+		  xmlns:mx="library://ns.adobe.com/flex/mx" width="350" height="160"
 		  creationComplete="onCreationComplete()" type="lightweight" systemChrome="none" transparent="true"
 		  showStatusBar="false" title="Warfish Notifier Configuration" backgroundColor="#000000" backgroundAlpha="0.75">
 	<s:layout>
@@ -19,10 +19,14 @@
 			private function onCreationComplete():void{
 				nativeWindow.x = (Capabilities.screenResolutionX - nativeWindow.width) / 2;
 				nativeWindow.y = (Capabilities.screenResolutionY - nativeWindow.height) / 2;
+				startOnLoginCbox.selected = warfishConfig.startOnLogin;
+				delaySlider.value = warfishConfig.bubbleInterval / 60000;
 			}
 			
 			protected function btn_saveSettings_clickHandler(event:Event):void{
 				warfishConfig.rssURL = ti_rssURL.text;
+				warfishConfig.startOnLogin = startOnLoginCbox.selected;
+				warfishConfig.bubbleInterval = delaySlider.value * 60000;
 				this.close();
 			}
 
@@ -33,14 +37,16 @@
 
 		]]>
 	</fx:Script>
-	
-	<fx:Declarations>
-		<!-- Place non-visual elements (e.g., services, value objects) here -->
-	</fx:Declarations>
 	<mx:MenuBar mouseDown="startMove(event)" width="100%" height="15" direction="rtl" />
 	<mx:Form width="100%" height="100%">
 		<mx:FormItem label="RSS URL" width="100%" color="#FFFFFF">
 			<s:TextInput id="ti_rssURL" width="100%" text="{warfishConfig.rssURL}" enter="btn_saveSettings_clickHandler(event)" color="#000000"/>
+		</mx:FormItem>
+		<mx:FormItem color="#FFFFFF" width="100%">
+			<s:CheckBox id="startOnLoginCbox" label="Start on login"/>
+		</mx:FormItem>
+		<mx:FormItem label="Alert every {delaySlider.value.toString()} minutes" width="100%" color="#FFFFFF">
+			<s:HSlider id="delaySlider" width="100%" minimum="1" maximum="30" />
 		</mx:FormItem>
 	</mx:Form>
 	<s:HGroup width="100%">

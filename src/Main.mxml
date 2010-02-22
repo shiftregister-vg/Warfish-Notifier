@@ -15,10 +15,14 @@
 			import flash.net.URLLoader;
 			import flash.net.URLRequest;
 			import flash.net.URLRequestMethod;
+			import flash.net.navigateToURL;
 			import flash.utils.clearInterval;
 			import flash.utils.setInterval;
 			
+			import managers.UpdateManager;
+			
 			import mx.events.AIREvent;
+			import mx.states.AddItems;
 			
 			import views.AlertBubble;
 			import views.ConfigWindow;
@@ -40,16 +44,24 @@
 			
 			private function onCreationComplete():void{
 				try {
-					NativeApplication.nativeApplication.startAtLogin = true;
+					NativeApplication.nativeApplication.startAtLogin = warfishConfig.startOnLogin;
 				} catch (e:Error) {}
 				NativeApplication.nativeApplication.autoExit = false;
+				
+				var websiteCommand:NativeMenuItem = iconMenu.addItem(new NativeMenuItem("Open Warfish"));
+					websiteCommand.addEventListener(Event.SELECT,onWebsiteSelect);
+				
+				var seperator:NativeMenuItem = iconMenu.addItem(new NativeMenuItem("",true));
+				
+				var soundCommand:NativeMenuItem = iconMenu.addItem(new NativeMenuItem("Enable Sound"));
+					soundCommand.addEventListener(Event.SELECT,onSoundSelect);
+					soundCommand.checked=warfishConfig.playSound;
 				
 				var configCommand:NativeMenuItem = iconMenu.addItem(new NativeMenuItem("Configure"));
 					configCommand.addEventListener(Event.SELECT,onConfigSelect);
 				
 				var exitCommand:NativeMenuItem = iconMenu.addItem(new NativeMenuItem("Exit"));
 					exitCommand.addEventListener(Event.SELECT,onExitSelect);
-				
 					
 				setIcon();
 				playSound();
@@ -58,11 +70,24 @@
 				if (!warfishConfig.rssURL.length){
 					onConfigSelect();
 				}
+				
+				var updateManager:UpdateManager = new UpdateManager();
+					updateManager.manifestURL = "http://update.slantsoft.com/warfishnotification/manifest.xml";
+					updateManager.checkForUpdate();
 			}
 			
 			private function iconLoadComplete(event:Event):void {
 				NativeApplication.nativeApplication.icon.bitmaps =
 					[event.target.content.bitmapData];
+			}
+			
+			private function onWebsiteSelect(event:Event=null):void{
+				navigateToURL(new URLRequest("http://warfish.net/war/play/"));
+			}
+			
+			private function onSoundSelect(event:Event=null):void{
+				var menuItem:NativeMenuItem = event.target as NativeMenuItem;
+				warfishConfig.playSound = menuItem.checked = !menuItem.checked;
 			}
 			
 			private function onConfigSelect(event:Event=null):void{
@@ -92,6 +117,10 @@
 				if (warfishConfig.rssURL.length){
 					interval = setInterval(onTick,30000);
 				}
+				/*if (bubbleInterval){
+					clearInterval(bubbleInterval);
+					bubbleInterval = setInterval(showAlert,warfishConfig.bubbleInterval);
+				}*/
 			}
 			
 			private function onTick():void{
@@ -146,8 +175,10 @@
 			}
 			
 			private function playSound(event:Event=null):void{
-				SoundMixer.soundTransform = new SoundTransform(1);
-				soundChannel = soundEmbed.play();
+				if (warfishConfig.playSound){
+					SoundMixer.soundTransform = new SoundTransform(1);
+					soundChannel = soundEmbed.play();
+				}
 			}
 			
 			private function showAlert():void{
