@@ -134,10 +134,10 @@
 				if (warfishConfig.rssURL.length){
 					interval = setInterval(onTick,30000);
 				}
-				/*if (bubbleInterval){
+				if (bubbleInterval){
 					clearInterval(bubbleInterval);
 					bubbleInterval = setInterval(showAlert,warfishConfig.bubbleInterval);
-				}*/
+				}
 			}
 			
 			private function onTick():void{
@@ -167,7 +167,7 @@
 					setIcon("-red"," - It's your turn!");
 					if (!bubbleInterval){
 						showAlert();
-						bubbleInterval = setInterval(showAlert,600000);
+						bubbleInterval = setInterval(showAlert,warfishConfig.bubbleInterval);
 					}
 				}
 			}
@@ -203,6 +203,7 @@
 					clearInterval(bubbleInterval);
 				}
 				var alertBubble:AlertBubble = new AlertBubble();
+					alertBubble.warfishConfig = warfishConfig;
 					alertBubble.addEventListener(AIREvent.WINDOW_ACTIVATE,playSound);
 					alertBubble.open();
 					alertBubble.activate();

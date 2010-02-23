@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <update xmlns="http://ns.adobe.com/air/framework/update/description/1.0">
-	<version>1.5</version>
-	<url>http://update.slantsoft.com/warfishnotification/WarfishTurnNotification-1.5.air</url>
+	<version>1.5.2</version>
+	<url>http://update.slantsoft.com/warfishnotification/WarfishTurnNotification-1.5.2.air</url>
 	<description><![CDATA[
-* Added ability to disable / enable sound.
-* Clicking the alert box will now open Warfish in a new browser window then close the alert.
-* Added contextual menu item to open Warfish in a new browser window.
-* Added option in config window to disable / enable auto start.
-* Turn notification delay is now configurable.
-* Added an auto updater.
+* The alert box can now have it's color changed.
+* Fixed a bug with the adjustable alert interval.
+* Restyled the config window.
+* Config window should now show up in the operating system's window manager.
 	]]></description>
 </update>

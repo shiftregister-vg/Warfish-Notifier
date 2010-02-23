@@ -98,6 +98,22 @@ package vo
 			return _bubbleInterval;
 		}
 		
+		public function set alertColor(value:uint):void{	
+			saveProperty("alertColor",value.toString());
+			dispatchEvent(new Event("valueChanged"));
+		}
+		
+		[Bindable (event="valueChanged")]
+		public function get alertColor():uint{
+			var _alertColor:Number = 0x3D004F;
+			
+			try {
+				_alertColor = uint(getProperty("alertColor"));
+			} catch (error:Error) {}
+			
+			return _alertColor;
+		}
+		
 		private function saveProperty(name:String,value:String):void{
 			var bytes:ByteArray = new ByteArray();
 				bytes.writeUTFBytes(value.toString());

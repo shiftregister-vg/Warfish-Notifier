@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:Window xmlns:fx="http://ns.adobe.com/mxml/2009" 
-		  xmlns:s="library://ns.adobe.com/flex/spark" 
-		  xmlns:mx="library://ns.adobe.com/flex/mx" width="350" height="160"
-		  creationComplete="onCreationComplete()" type="lightweight" systemChrome="none" transparent="true"
-		  showStatusBar="false" title="Warfish Notifier Configuration" backgroundColor="#000000" backgroundAlpha="0.75">
-	<s:layout>
-		<s:VerticalLayout horizontalAlign="left" paddingLeft="5" paddingRight="5" paddingTop="0" paddingBottom="5"/>
-	</s:layout>
-
+		  xmlns:s="library://ns.adobe.com/flex/spark" maximizable="false" minimizable="false"
+		  xmlns:mx="library://ns.adobe.com/flex/mx" width="500" height="350" resizable="false"
+		  creationComplete="onCreationComplete()" systemChrome="none" transparent="true"
+		  showStatusBar="false" title="Warfish Notifier Configuration" backgroundColor="#000000" backgroundAlpha="0">
+	
 	<fx:Script>
 		<![CDATA[
 			import flash.events.MouseEvent;
@@ -21,12 +18,16 @@
 				nativeWindow.y = (Capabilities.screenResolutionY - nativeWindow.height) / 2;
 				startOnLoginCbox.selected = warfishConfig.startOnLogin;
 				delaySlider.value = warfishConfig.bubbleInterval / 60000;
+				alertColorPicker.selectedColor = warfishConfig.alertColor;
+				
+				panel.titleDisplay.addEventListener(MouseEvent.MOUSE_DOWN,startMove);
 			}
 			
 			protected function btn_saveSettings_clickHandler(event:Event):void{
 				warfishConfig.rssURL = ti_rssURL.text;
 				warfishConfig.startOnLogin = startOnLoginCbox.selected;
 				warfishConfig.bubbleInterval = delaySlider.value * 60000;
+				warfishConfig.alertColor = alertColorPicker.selectedColor;
 				this.close();
 			}
 
@@ -37,21 +38,30 @@
 
 		]]>
 	</fx:Script>
-	<mx:MenuBar mouseDown="startMove(event)" width="100%" height="15" direction="rtl" />
-	<mx:Form width="100%" height="100%">
-		<mx:FormItem label="RSS URL" width="100%" color="#FFFFFF">
-			<s:TextInput id="ti_rssURL" width="100%" text="{warfishConfig.rssURL}" enter="btn_saveSettings_clickHandler(event)" color="#000000"/>
-		</mx:FormItem>
-		<mx:FormItem color="#FFFFFF" width="100%">
-			<s:CheckBox id="startOnLoginCbox" label="Start on login"/>
-		</mx:FormItem>
-		<mx:FormItem label="Alert every {delaySlider.value.toString()} minutes" width="100%" color="#FFFFFF">
-			<s:HSlider id="delaySlider" width="100%" minimum="1" maximum="30" />
-		</mx:FormItem>
-	</mx:Form>
-	<s:HGroup width="100%">
-		<s:Button id="btn_saveSettings" label="Save Settings" click="btn_saveSettings_clickHandler(event)" />
-		<s:Button label="Cancel" click="this.close()"/>
-	</s:HGroup>
+	
+	<s:Panel id="panel" left="25" title="Configuration" width="350" height="225" alpha="0.9" top="10">
+		<s:layout>
+			<s:VerticalLayout horizontalAlign="left" paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="10" />
+		</s:layout>
+		
+		<mx:Form width="100%" height="100%">
+			<mx:FormItem label="RSS URL" width="100%" color="#000000">
+				<s:TextInput id="ti_rssURL" width="100%" text="{warfishConfig.rssURL}" enter="btn_saveSettings_clickHandler(event)" color="#000000"/>
+			</mx:FormItem>
+			<mx:FormItem color="#000000" width="100%">
+				<s:CheckBox id="startOnLoginCbox" label="Start on login"/>
+			</mx:FormItem>
+			<mx:FormItem label="Alert every {delaySlider.value.toString()} minutes" width="100%" color="#000000">
+				<s:HSlider id="delaySlider" width="100%" minimum="1" maximum="30" />
+			</mx:FormItem>
+			<mx:FormItem label="Alert Color" width="100%" color="#000000">
+				<mx:ColorPicker id="alertColorPicker" />
+			</mx:FormItem>
+		</mx:Form>
+		<s:HGroup width="100%">
+			<s:Button id="btn_saveSettings" label="Save Settings" click="btn_saveSettings_clickHandler(event)" />
+			<s:Button label="Cancel" click="this.close()"/>
+		</s:HGroup>
+	</s:Panel>
 	
 </s:Window>
