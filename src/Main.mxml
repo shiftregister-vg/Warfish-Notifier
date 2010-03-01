@@ -142,6 +142,7 @@
 				
 				if (!isTurn){
 					setIcon();
+					iconMenuManager.removeMenuByLabel("Games");
 					if (bubbleInterval){
 						clearInterval(bubbleInterval);
 					}

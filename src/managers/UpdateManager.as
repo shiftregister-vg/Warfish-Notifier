@@ -27,7 +27,7 @@ package managers
 				var manifestError:Error = new Error("manifestURL was not supplied");
 				throw manifestError;
 			} else {
-				appUpdater.updateURL = manifestURL;
+				appUpdater.updateURL = manifestURL + "?rnd=" + Math.random();
 				appUpdater.isCheckForUpdateVisible = false;
 				appUpdater.addEventListener(UpdateEvent.INITIALIZED,onUpdate);
 				appUpdater.addEventListener(ErrorEvent.ERROR,onError);

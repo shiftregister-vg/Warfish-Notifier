@@ -56,6 +56,16 @@ package managers
 			iconMenu.addItemAt(_menuItem,_position);
 		}
 		
+		public function removeMenuByLabel(_menuLabel:String):void{
+			if (_menuLabel.length){
+				for (var i:int = 0; i  < iconMenu.items.length; i++){
+					if (iconMenu.items[i].label == _menuLabel){
+						iconMenu.removeItemAt(i);
+					}
+				}
+			}
+		}
+		
 		private function getAppVersion():String {
 			var appXml:XML = NativeApplication.nativeApplication.applicationDescriptor;
 			var ns:Namespace = appXml.namespace();
