@@ -9,9 +9,14 @@
 		<![CDATA[
 			import flash.events.MouseEvent;
 			
+			import managers.UpdateManager;
+			
+			import mx.controls.Alert;
+			
 			import vo.WarfishConfig;
 			
 			[Bindable] public var warfishConfig:WarfishConfig;
+			public var updateManager:UpdateManager;
 			
 			private function onCreationComplete():void{
 				nativeWindow.x = (Capabilities.screenResolutionX - nativeWindow.width) / 2;
@@ -21,6 +26,12 @@
 				alertColorPicker.selectedColor = warfishConfig.alertColor;
 				
 				panel.titleDisplay.addEventListener(MouseEvent.MOUSE_DOWN,startMove);
+				
+				updateManager.addEventListener("noUpdateAvailable",function(event:Event):void{
+					btn_checkForUpdate.enabled = false;
+					btn_checkForUpdate.label = "No update available";
+					cursorManager.removeBusyCursor();
+				});
 			}
 			
 			protected function btn_saveSettings_clickHandler(event:Event):void{
@@ -39,7 +50,7 @@
 		]]>
 	</fx:Script>
 	
-	<s:Panel id="panel" left="25" title="Configuration" width="350" height="225" alpha="0.9" top="10">
+	<s:Panel id="panel" left="25" title="Configuration" width="350" height="250" alpha="0.9" top="10">
 		<s:layout>
 			<s:VerticalLayout horizontalAlign="left" paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="10" />
 		</s:layout>
@@ -48,14 +59,17 @@
 			<mx:FormItem label="RSS URL" width="100%" color="#000000">
 				<s:TextInput id="ti_rssURL" width="100%" text="{warfishConfig.rssURL}" enter="btn_saveSettings_clickHandler(event)" color="#000000"/>
 			</mx:FormItem>
+			<mx:FormItem label="Alert Color" width="100%" color="#000000">
+				<mx:ColorPicker id="alertColorPicker" />
+			</mx:FormItem>
 			<mx:FormItem color="#000000" width="100%">
 				<s:CheckBox id="startOnLoginCbox" label="Start on login"/>
 			</mx:FormItem>
 			<mx:FormItem label="Alert every {delaySlider.value.toString()} minutes" width="100%" color="#000000">
 				<s:HSlider id="delaySlider" width="100%" minimum="1" maximum="30" />
 			</mx:FormItem>
-			<mx:FormItem label="Alert Color" width="100%" color="#000000">
-				<mx:ColorPicker id="alertColorPicker" />
+			<mx:FormItem width="100%">
+				<s:Button id="btn_checkForUpdate" label="Check for Update" click="updateManager.manualCheckForUpdate();cursorManager.setBusyCursor()" />
 			</mx:FormItem>
 		</mx:Form>
 		<s:HGroup width="100%">

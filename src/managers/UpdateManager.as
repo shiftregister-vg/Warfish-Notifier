@@ -1,18 +1,20 @@
 package managers
 {
 	import air.update.ApplicationUpdaterUI;
+	import air.update.events.StatusUpdateEvent;
 	import air.update.events.UpdateEvent;
 	
 	import flash.desktop.NativeApplication;
 	import flash.events.ErrorEvent;
 	import flash.events.Event;
+	import flash.events.EventDispatcher;
 	import flash.net.URLLoader;
 	import flash.net.URLRequest;
 	import flash.net.URLRequestMethod;
 	
 	import mx.controls.Alert;
 
-	public class UpdateManager
+	public class UpdateManager extends EventDispatcher
 	{
 		public var manifestURL:String;
 		private var manifest:XML;
@@ -39,8 +41,36 @@ package managers
 			appUpdater.checkNow();
 		}
 		
+		public function manualCheckForUpdate():void{
+			 var urlRequest:URLRequest = new URLRequest(manifestURL + "?" + Math.random() + "=" + Math.random());
+			 urlRequest.contentType = "text/xml";
+			 urlRequest.method = URLRequestMethod.GET;
+			 var loader:URLLoader = new URLLoader();
+			 loader.addEventListener(Event.COMPLETE,onManualCheckForUpdateRequestComplete);
+			 loader.load(urlRequest);
+		}
+		
+		private function onManualCheckForUpdateRequestComplete(event:Event):void{
+			var loader:URLLoader = URLLoader(event.target);
+			var xmlnsPattern:RegExp = new RegExp("xmlns[^\"]*\"[^\"]*\"", "gi");
+			manifest = XML(XML(loader.data).toXMLString().replace(xmlnsPattern,""));
+			
+			if (manifest.version <= getAppVersion()){
+				dispatchEvent(new Event("noUpdateAvailable"));
+			} else {
+				checkForUpdate();
+			}
+		}
+		
 		private function onError(event:ErrorEvent):void{
 			Alert.show(event.toString());
+		}
+		
+		private function getAppVersion():String {
+			var appXml:XML = NativeApplication.nativeApplication.applicationDescriptor;
+			var ns:Namespace = appXml.namespace();
+			var appVersion:String = appXml.ns::version[0];
+			return appVersion;
 		}
 	}
 }

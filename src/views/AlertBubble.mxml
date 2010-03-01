@@ -3,7 +3,7 @@
 		  xmlns:s="library://ns.adobe.com/flex/spark" 
 		  xmlns:mx="library://ns.adobe.com/flex/mx"
 		  width="335" height="25" showStatusBar="false" alwaysInFront="true"
-		  backgroundAlpha="0.65" creationComplete="init()"
+		  backgroundAlpha="0.65" creationComplete="init()" focusEnabled="false"
 		  color="#FFFFFF" type="lightweight" systemChrome="none" transparent="true">
 	
 	<fx:Script>
@@ -21,8 +21,8 @@
 			
 			private function init():void{
 				var timer:int = setTimeout(closeBubble,10000);
-				nativeWindow.x = ( Screen.mainScreen.bounds.width - 340 );
-				nativeWindow.y = ( Screen.mainScreen.bounds.height - 75 );
+				nativeWindow.x = ( Screen.mainScreen.bounds.width - (this.width + 5) );
+				nativeWindow.y = ( Screen.mainScreen.bounds.height - (this.height + 35) );
 				this.addEventListener(MouseEvent.CLICK,onBubbleClick);
 				this.setStyle("backgroundColor",warfishConfig.alertColor);
 			}

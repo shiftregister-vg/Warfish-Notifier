@@ -3,7 +3,6 @@
 					   xmlns:s="library://ns.adobe.com/flex/spark" 
 					   xmlns:mx="library://ns.adobe.com/flex/mx"
 					   creationComplete="onCreationComplete()">
-	
 	<fx:Script>
 		<![CDATA[
 			import flash.display.NativeMenuItem;
@@ -41,6 +40,8 @@
 			private var soundEmbed:Sound = new alertSoundClass() as Sound;
 			private var soundChannel:SoundChannel;
 			private var iconMenuManager:IconMenuManager = new IconMenuManager(iconMenu);
+			private var updateManager:UpdateManager = new UpdateManager();
+			private var alertBubble:AlertBubble = new AlertBubble();
 			
 			[Bindable] private var warfishConfig:WarfishConfig = new WarfishConfig();
 			
@@ -62,9 +63,12 @@
 					onConfigSelect();
 				}
 				
-				var updateManager:UpdateManager = new UpdateManager();
-					updateManager.manifestURL = "http://update.slantsoft.com/warfishnotification/manifest.xml";
+				updateManager.manifestURL = "http://update.slantsoft.com/warfishnotification/manifest.xml";
+				updateManager.checkForUpdate();
+				
+				var updateInterval:int = setInterval(function(event:Event=null):void{
 					updateManager.checkForUpdate();
+				},7200000);
 			}
 			
 			private function setAutoLoad():void{
@@ -93,6 +97,7 @@
 				}
 				
 				configWindow.warfishConfig = warfishConfig;
+				configWindow.updateManager = updateManager;
 				configWindow.addEventListener(Event.CLOSE,onConfigWindowClose);
 				configWindow.open();
 				configWindow.activate();
@@ -158,8 +163,10 @@
 							});
 						}
 					}
-					gamesMenuItem.submenu = gamesMenu;
-					iconMenuManager.addMenuItemAt(gamesMenuItem,1);
+					if (gamesMenu.items.length){
+						gamesMenuItem.submenu = gamesMenu;
+						iconMenuManager.addMenuItemAt(gamesMenuItem,1);
+					}
 					
 					setIcon("-red"," - It's your turn!");
 					if (!bubbleInterval){
@@ -198,15 +205,14 @@
 			private function showAlert():void{
 				if (bubbleInterval){
 					clearInterval(bubbleInterval);
+					bubbleInterval = 0;
 				}
-				var alertBubble:AlertBubble = new AlertBubble();
-					alertBubble.warfishConfig = warfishConfig;
-					alertBubble.addEventListener(AIREvent.WINDOW_ACTIVATE,playSound);
-					alertBubble.open();
-					alertBubble.activate();
+				
+				alertBubble.warfishConfig = warfishConfig;
+				alertBubble.addEventListener(AIREvent.WINDOW_ACTIVATE,playSound);
+				alertBubble.open();
+				alertBubble.activate();
 			}
 		]]>
 	</fx:Script>
-	<fx:Declarations>
-	</fx:Declarations>
 </s:Application>
