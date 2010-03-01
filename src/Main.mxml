@@ -19,6 +19,7 @@
 			import flash.utils.clearInterval;
 			import flash.utils.setInterval;
 			
+			import managers.IconMenuManager;
 			import managers.UpdateManager;
 			
 			import mx.events.AIREvent;
@@ -39,6 +40,7 @@
 			private var alertSoundClass:Class;
 			private var soundEmbed:Sound = new alertSoundClass() as Sound;
 			private var soundChannel:SoundChannel;
+			private var iconMenuManager:IconMenuManager = new IconMenuManager(iconMenu);
 			
 			[Bindable] private var warfishConfig:WarfishConfig = new WarfishConfig();
 			
@@ -46,28 +48,14 @@
 				setAutoLoad();
 				NativeApplication.nativeApplication.autoExit = false;
 				
-				var websiteCommand:NativeMenuItem = iconMenu.addItem(new NativeMenuItem("Open Warfish"));
-					websiteCommand.addEventListener(Event.SELECT,onWebsiteSelect);
+				iconMenuManager.warfishConfig = warfishConfig;
+				iconMenuManager.addEventListener("Exit",onExitSelect);
+				iconMenuManager.addEventListener("Configure",onConfigSelect);
+				iconMenuManager.addEventListener("Enable Sound",onSoundSelect);
+				iconMenuManager.addEventListener("Open Warfish",onWebsiteSelect);
+				iconMenuManager.buildIconMenu();
 				
-				var seperator:NativeMenuItem = iconMenu.addItem(new NativeMenuItem("",true));
-				
-				var soundCommand:NativeMenuItem = iconMenu.addItem(new NativeMenuItem("Enable Sound"));
-					soundCommand.addEventListener(Event.SELECT,onSoundSelect);
-					soundCommand.checked=warfishConfig.playSound;
-				
-				var configCommand:NativeMenuItem = iconMenu.addItem(new NativeMenuItem("Configure"));
-					configCommand.addEventListener(Event.SELECT,onConfigSelect);
-				
-				var exitCommand:NativeMenuItem = iconMenu.addItem(new NativeMenuItem("Exit"));
-					exitCommand.addEventListener(Event.SELECT,onExitSelect);
-					
-				var bottomSeperator:NativeMenuItem = iconMenu.addItem(new NativeMenuItem("",true));
-				
-				var versionMenu:NativeMenuItem = iconMenu.addItem(new NativeMenuItem("Version " + getAppVersion()));
-					versionMenu.enabled = false;
-					
 				setIcon();
-				playSound();
 				startInterval();
 				
 				if (!warfishConfig.rssURL.length){
@@ -77,13 +65,6 @@
 				var updateManager:UpdateManager = new UpdateManager();
 					updateManager.manifestURL = "http://update.slantsoft.com/warfishnotification/manifest.xml";
 					updateManager.checkForUpdate();
-			}
-			
-			private function getAppVersion():String {
-				var appXml:XML = NativeApplication.nativeApplication.applicationDescriptor;
-				var ns:Namespace = appXml.namespace();
-				var appVersion:String = appXml.ns::version[0];
-				return appVersion;
 			}
 			
 			private function setAutoLoad():void{
@@ -136,6 +117,7 @@
 				}
 				if (bubbleInterval){
 					clearInterval(bubbleInterval);
+					bubbleInterval = 0;
 					bubbleInterval = setInterval(showAlert,warfishConfig.bubbleInterval);
 				}
 			}
@@ -164,6 +146,15 @@
 						clearInterval(bubbleInterval);
 					}
 				} else {
+					var gamesMenu:NativeMenuItem = new NativeMenuItem("Games");					
+					for (var i:int = 0; i < rssXML..item.length; i++){
+						var gameMenu:NativeMenuItem = new NativeMenuItem();
+							gamesMenu.addEventListener(Event.SELECT,function(event:Event):void{
+								trace(rssXML..item[i]);
+							});
+						
+					}
+					
 					setIcon("-red"," - It's your turn!");
 					if (!bubbleInterval){
 						showAlert();
