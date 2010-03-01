@@ -146,14 +146,19 @@
 						clearInterval(bubbleInterval);
 					}
 				} else {
-					var gamesMenu:NativeMenuItem = new NativeMenuItem("Games");					
-					for (var i:int = 0; i < rssXML..item.length; i++){
-						var gameMenu:NativeMenuItem = new NativeMenuItem();
-							gamesMenu.addEventListener(Event.SELECT,function(event:Event):void{
-								trace(rssXML..item[i]);
+					var gamesMenuItem:NativeMenuItem = new NativeMenuItem("Games");
+					var gamesMenu:NativeMenu = new NativeMenu();
+					for (var i:int = 0; i < rssXML..item.length(); i++){
+						if (rssXML..item[i].title.toString() != "View Your Turn Games list"){
+							var gameMenu:NativeMenuItem = gamesMenu.addItem(new NativeMenuItem(rssXML..item[i].title.toString().replace(" [Your turn]","")));
+							gameMenu.data = {url:rssXML..item[i].link.toString()};
+							gameMenu.addEventListener(Event.SELECT,function(event:Event):void{
+								navigateToURL(new URLRequest(event.target.data.url));
 							});
-						
+						}
 					}
+					gamesMenuItem.submenu = gamesMenu;
+					iconMenuManager.addMenuItemAt(gamesMenuItem,1);
 					
 					setIcon("-red"," - It's your turn!");
 					if (!bubbleInterval){
