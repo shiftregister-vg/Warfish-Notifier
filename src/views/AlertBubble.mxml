@@ -22,7 +22,7 @@
 			private function init():void{
 				var timer:int = setTimeout(closeBubble,10000);
 				nativeWindow.x = ( Screen.mainScreen.bounds.width - 340 );
-				nativeWindow.y = ( Screen.mainScreen.bounds.height - 60 );
+				nativeWindow.y = ( Screen.mainScreen.bounds.height - 70 );
 				this.addEventListener(MouseEvent.CLICK,onBubbleClick);
 				this.setStyle("backgroundColor",warfishConfig.alertColor);
 			}
@@ -43,8 +43,5 @@
 	<s:layout>
 		<s:HorizontalLayout paddingLeft="5" paddingRight="5" paddingTop="5" paddingBottom="5" verticalAlign="middle" horizontalAlign="center"/>
 	</s:layout>
-	<fx:Declarations>
-		<!-- Place non-visual elements (e.g., services, value objects) here -->
-	</fx:Declarations>
 	<s:Label id="noteLabel" text="It's your turn in one or more Warfish games!" fontWeight="bold" fontSize="13" fontFamily="Verdana"/>
 </s:Window>
