@@ -2,7 +2,7 @@
 <s:Application xmlns:fx="http://ns.adobe.com/mxml/2009" 
 					   xmlns:s="library://ns.adobe.com/flex/spark" 
 					   xmlns:mx="library://ns.adobe.com/flex/mx"
-					   creationComplete="onCreationComplete()">
+					   creationComplete="onCreationComplete()" xmlns:eventMaps="eventMaps.*">
 	<fx:Script>
 		<![CDATA[
 			import flash.display.NativeMenuItem;
@@ -29,9 +29,8 @@
 			
 			import vo.WarfishConfig;
 			
-			private var configWindow:ConfigWindow;
 			private var icon:Loader = new Loader();
-			private var iconMenu:NativeMenu = new NativeMenu();
+			public var iconMenu:NativeMenu;
 			private var interval:int;
 			private var bubbleInterval:int;
 			private var rssXML:XML;
@@ -39,24 +38,29 @@
 			private var alertSoundClass:Class;
 			private var soundEmbed:Sound = new alertSoundClass() as Sound;
 			private var soundChannel:SoundChannel;
-			private var iconMenuManager:IconMenuManager = new IconMenuManager(iconMenu);
-			private var updateManager:UpdateManager = new UpdateManager();
-			private var alertBubble:AlertBubble = new AlertBubble();
+			private var iconMenuManager:IconMenuManager;
+			private var updateManager:UpdateManager;
+			private var alertBubble:AlertBubble;
 			private var iconBlinkInterval:int;
 			private var iconIsBlue:Boolean = true;
 			
-			[Bindable] private var warfishConfig:WarfishConfig = new WarfishConfig();
+			[Bindable] public var warfishConfig:WarfishConfig;
 			
 			private function onCreationComplete():void{
+				
+				iconMenuManager = new IconMenuManager(iconMenu);
+				updateManager = new UpdateManager();
+				alertBubble = new AlertBubble();
+				
 				setAutoLoad();
 				NativeApplication.nativeApplication.autoExit = false;
 				
-				iconMenuManager.warfishConfig = warfishConfig;
+				//iconMenuManager.warfishConfig = warfishConfig;
 				iconMenuManager.addEventListener("Exit",onExitSelect);
 				iconMenuManager.addEventListener("Configure",onConfigSelect);
 				iconMenuManager.addEventListener("Enable Sound",onSoundSelect);
 				iconMenuManager.addEventListener("Open Warfish",onWebsiteSelect);
-				iconMenuManager.buildIconMenu();
+				//iconMenuManager.buildIconMenu();
 				
 				setIcon();
 				startInterval();
@@ -71,6 +75,8 @@
 				var updateInterval:int = setInterval(function(event:Event=null):void{
 					updateManager.checkForUpdate();
 				},7200000);
+				
+				dispatchEvent(new Event("ApplicationCreationComplete",true));
 			}
 			
 			private function setAutoLoad():void{
@@ -94,15 +100,7 @@
 			}
 			
 			private function onConfigSelect(event:Event=null):void{
-				if (!configWindow || configWindow.closed){
-					configWindow = new ConfigWindow();
-				}
 				
-				configWindow.warfishConfig = warfishConfig;
-				configWindow.updateManager = updateManager;
-				configWindow.addEventListener("configSettingsSaved",onConfigWindowClose);
-				configWindow.open();
-				configWindow.activate();
 			}
 			
 			private function onConfigWindowClose(event:Event):void{
@@ -110,7 +108,7 @@
 				startInterval();
 			}
 			
-			private function onExitSelect(event:Event):void{
+			public function onExitSelect(event:Event=null):void{
 				NativeApplication.nativeApplication.icon.bitmaps = [];
 				NativeApplication.nativeApplication.exit();
 			}
@@ -229,11 +227,14 @@
 					bubbleInterval = 0;
 				}
 				
-				alertBubble.warfishConfig = warfishConfig;
+				//alertBubble.warfishConfig = warfishConfig;
 				alertBubble.addEventListener(AIREvent.WINDOW_ACTIVATE,playSound);
 				alertBubble.open();
 				alertBubble.activate();
 			}
 		]]>
 	</fx:Script>
+	<fx:Declarations>
+		<eventMaps:MainEventMap />
+	</fx:Declarations>
 </s:Application>

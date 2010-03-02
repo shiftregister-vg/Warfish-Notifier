@@ -4,6 +4,10 @@ package managers
 	import air.update.events.StatusUpdateEvent;
 	import air.update.events.UpdateEvent;
 	
+	import com.asfusion.mate.events.Dispatcher;
+	
+	import events.UpdateManagerEvent;
+	
 	import flash.desktop.NativeApplication;
 	import flash.events.ErrorEvent;
 	import flash.events.Event;
@@ -19,6 +23,7 @@ package managers
 		public var manifestURL:String;
 		private var manifest:XML;
 		private var appUpdater:ApplicationUpdaterUI = new ApplicationUpdaterUI();
+		private var dispatcher:Dispatcher = new Dispatcher();
 		
 		public function UpdateManager(){
 			
@@ -56,7 +61,7 @@ package managers
 			manifest = XML(XML(loader.data).toXMLString().replace(xmlnsPattern,""));
 			
 			if (manifest.version <= getAppVersion()){
-				dispatchEvent(new Event("noUpdateAvailable"));
+				dispatcher.dispatchEvent(new UpdateManagerEvent(UpdateManagerEvent.NO_UPDATE_AVAILABLE));
 			} else {
 				checkForUpdate();
 			}

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mate:EventMap xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" 
+			   xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:mate="http://mate.asfusion.com/">
+	<fx:Script>
+		<![CDATA[
+			import events.ConfigEvent;
+			import events.UpdateManagerEvent;
+			import managers.ConfigManager;
+			import managers.UpdateManager;
+			
+			import views.ConfigWindow;
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<mate:Debugger level="{Debugger.ALL}"/>
+		
+		<mate:EventHandlers type="{UpdateManagerEvent.NO_UPDATE_AVAILABLE}" debug="true">
+			<mate:EventAnnouncer generator="{ConfigEvent}" type="{ConfigEvent.DISABLE_CHECK_FOR_UPDATE_BUTTON}" />
+		</mate:EventHandlers>
+		
+		<mate:EventHandlers type="{UpdateManagerEvent.CHECK_FOR_UPDATE_MANUAL}" debug="true">
+			<mate:MethodInvoker generator="{UpdateManager}" method="manualCheckForUpdate" />
+		</mate:EventHandlers>
+		
+		<mate:EventHandlers type="{ConfigEvent.DISABLE_CHECK_FOR_UPDATE_BUTTON}" debug="true">
+			<mate:MethodInvoker generator="{ConfigWindow}" method="noUpdateAvailable" />
+		</mate:EventHandlers>
+	</fx:Declarations>
+</mate:EventMap>

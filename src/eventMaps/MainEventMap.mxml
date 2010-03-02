@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mate:EventMap xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:mate="http://mate.asfusion.com/">
+	<fx:Script>
+		<![CDATA[
+			import events.ConfigEvent;
+			import events.IconMenuEvent;
+			import events.UpdateManagerEvent;
+			
+			import managers.AlertManager;
+			import managers.ConfigManager;
+			import managers.IconMenuManager;
+			import managers.UpdateManager;
+			
+			import views.AlertBubble;
+			import views.ConfigWindow;
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		
+		<mate:Debugger level="{Debugger.ALL}"/>
+		
+		<!-- handlers -->
+		<mate:EventHandlers type="ApplicationCreationComplete">
+			<mate:MethodInvoker generator="{IconMenuManager}" method="buildIconMenu" />
+		</mate:EventHandlers>
+		
+		<mate:EventHandlers type="{IconMenuEvent.EXIT_MENU_SELECTED}">
+			<mate:MethodInvoker generator="{Main}" method="onExitSelect" />
+		</mate:EventHandlers>
+		
+		<mate:EventHandlers type="{IconMenuEvent.CONFIG_MENU_SELECTED}">
+			<mate:MethodInvoker generator="{ConfigManager}" method="openConfigWindow" />
+		</mate:EventHandlers>
+		
+		<!-- property injectors -->
+		<mate:Injectors targets="{[Main,AlertBubble,ConfigWindow,AlertManager,IconMenuManager]}">
+			<mate:PropertyInjector source="{ConfigManager}" sourceKey="warfishConfig" targetKey="warfishConfig" />
+		</mate:Injectors>
+		
+		<mate:Injectors targets="{[Main,IconMenuManager]}">
+			<mate:PropertyInjector source="{IconMenuManager}" sourceKey="iconMenu" targetKey="iconMenu" />
+		</mate:Injectors>
+		
+	</fx:Declarations>
+</mate:EventMap>

@@ -3,10 +3,14 @@
 		  xmlns:s="library://ns.adobe.com/flex/spark" maximizable="false" minimizable="false"
 		  xmlns:mx="library://ns.adobe.com/flex/mx" width="450" height="330" resizable="false"
 		  creationComplete="onCreationComplete()" systemChrome="none" transparent="true"
-		  showStatusBar="false" title="Warfish Notifier Configuration" backgroundColor="#000000" backgroundAlpha="0">
+		  showStatusBar="false" title="Warfish Notifier Configuration" backgroundColor="#000000" backgroundAlpha="0" xmlns:eventMaps="eventMaps.*" xmlns:mate="http://mate.asfusion.com/">
 	
 	<fx:Script>
 		<![CDATA[
+			import com.asfusion.mate.ioc.InjectorRegistry;
+			
+			import events.UpdateManagerEvent;
+			
 			import flash.events.MouseEvent;
 			
 			import managers.UpdateManager;
@@ -19,6 +23,8 @@
 			public var updateManager:UpdateManager;
 			
 			private function onCreationComplete():void{
+				InjectorRegistry.register(this);
+				
 				nativeWindow.x = (Capabilities.screenResolutionX - nativeWindow.width) / 2;
 				nativeWindow.y = (Capabilities.screenResolutionY - nativeWindow.height) / 2;
 				startOnLoginCbox.selected = warfishConfig.startOnLogin;
@@ -27,12 +33,17 @@
 				blinkIconCbox.selected = warfishConfig.blinkIconOnTurn;
 				
 				panel.titleDisplay.addEventListener(MouseEvent.MOUSE_DOWN,startMove);
-				
-				updateManager.addEventListener("noUpdateAvailable",function(event:Event):void{
-					btn_checkForUpdate.enabled = false;
-					btn_checkForUpdate.label = "No update available";
-					cursorManager.removeBusyCursor();
-				});
+			}
+			
+			private function checkForUpdate():void{
+				cursorManager.setBusyCursor();
+				dispatcher.dispatchEvent(new UpdateManagerEvent(UpdateManagerEvent.CHECK_FOR_UPDATE_MANUAL));
+			}
+			
+			public function noUpdateAvailable():void{
+				btn_checkForUpdate.enabled = false;
+				btn_checkForUpdate.label = "No update available";
+				cursorManager.removeBusyCursor();
 			}
 			
 			protected function btn_saveSettings_clickHandler(event:Event):void{
@@ -75,7 +86,7 @@
 				<s:CheckBox id="blinkIconCbox" label="Blink Tray / Dock Icon" />
 			</mx:FormItem>
 			<mx:FormItem width="100%">
-				<s:Button id="btn_checkForUpdate" label="Check for Update" click="updateManager.manualCheckForUpdate();cursorManager.setBusyCursor()" />
+				<s:Button id="btn_checkForUpdate" label="Check for Update" click="checkForUpdate()" />
 			</mx:FormItem>
 		</mx:Form>
 		<s:HGroup width="100%">
@@ -83,5 +94,8 @@
 			<s:Button label="Cancel" click="this.close()"/>
 		</s:HGroup>
 	</s:Panel>
-	
+	<fx:Declarations>
+		<eventMaps:ConfigEventMap />
+		<mate:Dispatcher id="dispatcher"/>
+	</fx:Declarations>
 </s:Window>

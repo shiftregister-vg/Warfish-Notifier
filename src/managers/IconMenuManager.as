@@ -1,5 +1,9 @@
 package managers
 {
+	import com.asfusion.mate.events.Dispatcher;
+	
+	import events.IconMenuEvent;
+	
 	import flash.desktop.NativeApplication;
 	import flash.display.NativeMenu;
 	import flash.display.NativeMenuItem;
@@ -11,11 +15,26 @@ package managers
 	
 	public class IconMenuManager extends EventDispatcher
 	{
-		private var iconMenu:NativeMenu;
+		private var __iconMenu:NativeMenu;
 		public var warfishConfig:WarfishConfig;
+		private var dispatcher:Dispatcher = new Dispatcher();
 		
-		public function IconMenuManager(_iconMenu:NativeMenu){
-			iconMenu = _iconMenu;
+		public function IconMenuManager(_iconMenu:NativeMenu=null){
+			if (_iconMenu){
+				iconMenu = _iconMenu;
+			} else {
+				iconMenu = new NativeMenu();
+			}
+		}
+		
+		[Bindable (Event="valueChanged")]
+		public function get iconMenu():NativeMenu{
+			return __iconMenu;
+		}
+		
+		public function set iconMenu(value:NativeMenu):void{
+			__iconMenu = value;
+			dispatchEvent(new Event("valueChanged"));
 		}
 		
 		public function buildIconMenu():void{
@@ -29,10 +48,14 @@ package managers
 			soundCommand.checked=warfishConfig.playSound;
 			
 			var configCommand:NativeMenuItem = iconMenu.addItem(new NativeMenuItem("Configure"));
-			configCommand.addEventListener(Event.SELECT,onMenuSelect);
+			configCommand.addEventListener(Event.SELECT,function(event:Event):void{
+				dispatcher.dispatchEvent(new IconMenuEvent(IconMenuEvent.CONFIG_MENU_SELECTED));
+			});
 			
 			var exitCommand:NativeMenuItem = iconMenu.addItem(new NativeMenuItem("Exit"));
-			exitCommand.addEventListener(Event.SELECT,onMenuSelect);
+			exitCommand.addEventListener(Event.SELECT,function(event:Event):void{
+				dispatcher.dispatchEvent(new IconMenuEvent(IconMenuEvent.EXIT_MENU_SELECTED));
+			});
 			
 			var bottomSeperator:NativeMenuItem = iconMenu.addItem(new NativeMenuItem("",true));
 			
