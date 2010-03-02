@@ -42,6 +42,8 @@
 			private var iconMenuManager:IconMenuManager = new IconMenuManager(iconMenu);
 			private var updateManager:UpdateManager = new UpdateManager();
 			private var alertBubble:AlertBubble = new AlertBubble();
+			private var iconBlinkInterval:int;
+			private var iconIsBlue:Boolean = true;
 			
 			[Bindable] private var warfishConfig:WarfishConfig = new WarfishConfig();
 			
@@ -98,7 +100,7 @@
 				
 				configWindow.warfishConfig = warfishConfig;
 				configWindow.updateManager = updateManager;
-				configWindow.addEventListener(Event.CLOSE,onConfigWindowClose);
+				configWindow.addEventListener("configSettingsSaved",onConfigWindowClose);
 				configWindow.open();
 				configWindow.activate();
 			}
@@ -146,6 +148,11 @@
 				}
 				
 				if (!isTurn){
+					if (iconBlinkInterval){
+						clearInterval(iconBlinkInterval);
+						iconBlinkInterval = 0;
+					}
+					
 					setIcon();
 					iconMenuManager.removeMenuByLabel("Games");
 					if (bubbleInterval){
@@ -168,7 +175,21 @@
 						iconMenuManager.addMenuItemAt(gamesMenuItem,1);
 					}
 					
-					setIcon("-red"," - It's your turn!");
+					if (warfishConfig.blinkIconOnTurn){
+						if (!iconBlinkInterval){
+							iconBlinkInterval = setInterval(function():void{
+								if (iconIsBlue){
+									setIcon("-red"," - It's your turn!");
+								} else {
+									setIcon(""," - It's your turn!");
+								}
+								iconIsBlue = !iconIsBlue;
+							},500);
+						}
+					} else {
+						setIcon("-red"," - It's your turn!");
+					}
+					
 					if (!bubbleInterval){
 						showAlert();
 						bubbleInterval = setInterval(showAlert,warfishConfig.bubbleInterval);

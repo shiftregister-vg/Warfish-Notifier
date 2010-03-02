@@ -21,8 +21,8 @@
 			
 			private function init():void{
 				var timer:int = setTimeout(closeBubble,10000);
-				nativeWindow.x = ( Screen.mainScreen.bounds.width - (this.width + 5) );
-				nativeWindow.y = ( Screen.mainScreen.bounds.height - (this.height + 35) );
+				nativeWindow.x = ( Screen.mainScreen.bounds.width - 340 );
+				nativeWindow.y = ( Screen.mainScreen.bounds.height - 60 );
 				this.addEventListener(MouseEvent.CLICK,onBubbleClick);
 				this.setStyle("backgroundColor",warfishConfig.alertColor);
 			}

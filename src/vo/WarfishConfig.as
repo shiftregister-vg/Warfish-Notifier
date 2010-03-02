@@ -114,6 +114,24 @@ package vo
 			return _alertColor;
 		}
 		
+		public function set blinkIconOnTurn(value:Boolean):void{			
+			saveProperty("blinkIconOnTurn",value.toString());
+			dispatchEvent(new Event("valueChanged"));
+		}
+		
+		[Bindable (event="blinkIconOnTurn")]
+		public function get blinkIconOnTurn():Boolean{
+			var _blinkIconOnTurn:Boolean = true;
+			
+			try {
+				if (getProperty("blinkIconOnTurn") == "false"){
+					_blinkIconOnTurn = false;
+				}
+			} catch (error:Error) {}
+			
+			return _blinkIconOnTurn;
+		}
+		
 		private function saveProperty(name:String,value:String):void{
 			var bytes:ByteArray = new ByteArray();
 				bytes.writeUTFBytes(value.toString());
