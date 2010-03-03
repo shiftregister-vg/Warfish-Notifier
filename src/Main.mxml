@@ -5,6 +5,8 @@
 					   creationComplete="onCreationComplete()" xmlns:eventMaps="eventMaps.*">
 	<fx:Script>
 		<![CDATA[
+			import events.ConfigEvent;
+			
 			import flash.display.NativeMenuItem;
 			import flash.events.Event;
 			import flash.media.Sound;
@@ -52,21 +54,13 @@
 				updateManager = new UpdateManager();
 				alertBubble = new AlertBubble();
 				
-				setAutoLoad();
 				NativeApplication.nativeApplication.autoExit = false;
-				
-				//iconMenuManager.warfishConfig = warfishConfig;
-				iconMenuManager.addEventListener("Exit",onExitSelect);
-				iconMenuManager.addEventListener("Configure",onConfigSelect);
-				iconMenuManager.addEventListener("Enable Sound",onSoundSelect);
-				iconMenuManager.addEventListener("Open Warfish",onWebsiteSelect);
-				//iconMenuManager.buildIconMenu();
-				
+								
 				setIcon();
 				startInterval();
 				
 				if (!warfishConfig.rssURL.length){
-					onConfigSelect();
+					dispatchEvent(new ConfigEvent(ConfigEvent.OPEN_CONFIG_WINDOW));
 				}
 				
 				updateManager.manifestURL = "http://update.slantsoft.com/warfishnotification/manifest.xml";
@@ -79,40 +73,19 @@
 				dispatchEvent(new Event("ApplicationCreationComplete",true));
 			}
 			
-			private function setAutoLoad():void{
-				try {
-					NativeApplication.nativeApplication.startAtLogin = warfishConfig.startOnLogin;
-				} catch (e:Error) {}
-			}
-			
 			private function iconLoadComplete(event:Event):void {
 				NativeApplication.nativeApplication.icon.bitmaps =
 					[event.target.content.bitmapData];
 			}
-			
-			private function onWebsiteSelect(event:Event=null):void{
-				navigateToURL(new URLRequest("http://warfish.net/war/play/"));
-			}
-			
-			private function onSoundSelect(event:Event=null):void{
-				var menuItem:NativeMenuItem = event.target as NativeMenuItem;
-				warfishConfig.playSound = menuItem.checked = !menuItem.checked;
-			}
-			
-			private function onConfigSelect(event:Event=null):void{
-				
-			}
-			
-			private function onConfigWindowClose(event:Event):void{
-				setAutoLoad();
+			/**
+			 * TODO: onConfigWindowClose() needs to be moved to the alert manager
+			 **/
+			private function onConfigWindowClose():void{
 				startInterval();
 			}
-			
-			public function onExitSelect(event:Event=null):void{
-				NativeApplication.nativeApplication.icon.bitmaps = [];
-				NativeApplication.nativeApplication.exit();
-			}
-			
+			/**
+			 * TODO: startInterval() needs to be moved to the alert manager
+			 **/
 			private function startInterval():void{
 				if (interval){
 					clearInterval(interval);
@@ -227,7 +200,6 @@
 					bubbleInterval = 0;
 				}
 				
-				//alertBubble.warfishConfig = warfishConfig;
 				alertBubble.addEventListener(AIREvent.WINDOW_ACTIVATE,playSound);
 				alertBubble.open();
 				alertBubble.activate();

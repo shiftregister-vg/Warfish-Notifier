@@ -1,6 +1,7 @@
 package vo
 {
 	import flash.data.EncryptedLocalStore;
+	import flash.desktop.NativeApplication;
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	import flash.filesystem.File;

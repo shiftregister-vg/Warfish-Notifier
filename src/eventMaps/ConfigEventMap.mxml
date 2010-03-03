@@ -6,6 +6,8 @@
 		<![CDATA[
 			import events.ConfigEvent;
 			import events.UpdateManagerEvent;
+			
+			import managers.AlertManager;
 			import managers.ConfigManager;
 			import managers.UpdateManager;
 			
@@ -25,6 +27,10 @@
 		
 		<mate:EventHandlers type="{ConfigEvent.DISABLE_CHECK_FOR_UPDATE_BUTTON}" debug="true">
 			<mate:MethodInvoker generator="{ConfigWindow}" method="noUpdateAvailable" />
+		</mate:EventHandlers>
+		
+		<mate:EventHandlers type="{ConfigEvent.CONFIG_WINDOW_CLOSED}">
+			<mate:MethodInvoker generator="{AlertManager}" method="setupAlertInterval" />
 		</mate:EventHandlers>
 	</fx:Declarations>
 </mate:EventMap>

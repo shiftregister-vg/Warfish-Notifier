@@ -9,6 +9,8 @@ package managers
 	import flash.display.NativeMenuItem;
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
+	import flash.net.URLRequest;
+	import flash.net.navigateToURL;
 	
 	import vo.WarfishConfig;
 
@@ -39,12 +41,18 @@ package managers
 		
 		public function buildIconMenu():void{
 			var websiteCommand:NativeMenuItem = iconMenu.addItem(new NativeMenuItem("Open Warfish"));
-			websiteCommand.addEventListener(Event.SELECT,onMenuSelect);
+			websiteCommand.addEventListener(Event.SELECT,function(event:Event):void{
+				dispatcher.dispatchEvent(new IconMenuEvent(IconMenuEvent.OPEN_WARFISH_SELECTED));
+				navigateToURL(new URLRequest("http://warfish.net/war/play/"));
+			});
 			
 			var seperator:NativeMenuItem = iconMenu.addItem(new NativeMenuItem("",true));
 			
 			var soundCommand:NativeMenuItem = iconMenu.addItem(new NativeMenuItem("Enable Sound"));
-			soundCommand.addEventListener(Event.SELECT,onMenuSelect);
+			soundCommand.addEventListener(Event.SELECT,function(event:Event):void{
+				dispatcher.dispatchEvent(new IconMenuEvent(IconMenuEvent.ENABLE_SOUND_SELECTED));
+				warfishConfig.playSound = event.target.checked = !event.target.checked;
+			});
 			soundCommand.checked=warfishConfig.playSound;
 			
 			var configCommand:NativeMenuItem = iconMenu.addItem(new NativeMenuItem("Configure"));
@@ -55,17 +63,14 @@ package managers
 			var exitCommand:NativeMenuItem = iconMenu.addItem(new NativeMenuItem("Exit"));
 			exitCommand.addEventListener(Event.SELECT,function(event:Event):void{
 				dispatcher.dispatchEvent(new IconMenuEvent(IconMenuEvent.EXIT_MENU_SELECTED));
+				NativeApplication.nativeApplication.icon.bitmaps = [];
+				NativeApplication.nativeApplication.exit();
 			});
 			
 			var bottomSeperator:NativeMenuItem = iconMenu.addItem(new NativeMenuItem("",true));
 			
 			var versionMenu:NativeMenuItem = iconMenu.addItem(new NativeMenuItem("Version " + getAppVersion()));
 			versionMenu.enabled = false;
-		}
-		
-		public function onMenuSelect(event:Event=null):void{
-			var nativeMenuItem:NativeMenuItem = event.target as NativeMenuItem;
-			dispatchEvent(new Event(nativeMenuItem.label));
 		}
 		
 		public function addMenuItemAt(_menuItem:NativeMenuItem,_position:Number,_removeDuplicate:Boolean=true):void{

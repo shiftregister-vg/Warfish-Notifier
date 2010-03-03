@@ -3,7 +3,8 @@
 	<version>1.7</version>
 	<url>http://update.slantsoft.com/warfishnotification/WarfishTurnNotification-1.7.air</url>
 	<description><![CDATA[
-* Added new menu item to display games where it is your turn. Clicking these menu items will take you directly to that game.
-* Fixed a bug with the adjustable alert interval.
+* Added blinking icon to indicate when a player has turns. This is configurable and can be turned off in the config panel.
+* Added a button in the config panel to manually check for updates.  The app will also check for updates every 2 hours while running.
+* More fixes to the adjustable alert popup delay. It might be working this time!
 	]]></description>
 </update>

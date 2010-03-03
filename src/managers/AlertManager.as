@@ -17,5 +17,9 @@ package managers
 		public function showAlert(_useInterval:Boolean=true):void{
 			
 		}
+		
+		public function setupAlertInterval():void{
+			
+		}
 	}
 }

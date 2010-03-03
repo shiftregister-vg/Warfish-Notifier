@@ -9,6 +9,7 @@
 		<![CDATA[
 			import com.asfusion.mate.ioc.InjectorRegistry;
 			
+			import events.ConfigEvent;
 			import events.UpdateManagerEvent;
 			
 			import flash.events.MouseEvent;
@@ -49,10 +50,13 @@
 			protected function btn_saveSettings_clickHandler(event:Event):void{
 				warfishConfig.rssURL = ti_rssURL.text;
 				warfishConfig.startOnLogin = startOnLoginCbox.selected;
+				try {
+					NativeApplication.nativeApplication.startAtLogin = startOnLoginCbox.selected;
+				} catch (e:Error) {}
 				warfishConfig.bubbleInterval = delaySlider.value * 60000;
 				warfishConfig.alertColor = alertColorPicker.selectedColor;
 				warfishConfig.blinkIconOnTurn = blinkIconCbox.selected;
-				dispatchEvent(new Event("configSettingsSaved"));
+				dispatcher.dispatchEvent(new ConfigEvent(ConfigEvent.CONFIG_WINDOW_CLOSED));
 				this.close();
 			}
 

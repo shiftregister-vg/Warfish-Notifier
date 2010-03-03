@@ -21,20 +21,23 @@
 		
 		<mate:Debugger level="{Debugger.ALL}"/>
 		
-		<!-- handlers -->
+	<!-- handlers -->
 		<mate:EventHandlers type="ApplicationCreationComplete">
 			<mate:MethodInvoker generator="{IconMenuManager}" method="buildIconMenu" />
 		</mate:EventHandlers>
 		
-		<mate:EventHandlers type="{IconMenuEvent.EXIT_MENU_SELECTED}">
-			<mate:MethodInvoker generator="{Main}" method="onExitSelect" />
-		</mate:EventHandlers>
+		<!-- IconMenuEvent -->
 		
 		<mate:EventHandlers type="{IconMenuEvent.CONFIG_MENU_SELECTED}">
+			<mate:EventAnnouncer generator="{ConfigEvent}" type="{ConfigEvent.OPEN_CONFIG_WINDOW}" />
+		</mate:EventHandlers>
+		
+		<!-- ConfigEvent -->
+		<mate:EventHandlers type="{ConfigEvent.OPEN_CONFIG_WINDOW}">
 			<mate:MethodInvoker generator="{ConfigManager}" method="openConfigWindow" />
 		</mate:EventHandlers>
 		
-		<!-- property injectors -->
+	<!-- property injectors -->
 		<mate:Injectors targets="{[Main,AlertBubble,ConfigWindow,AlertManager,IconMenuManager]}">
 			<mate:PropertyInjector source="{ConfigManager}" sourceKey="warfishConfig" targetKey="warfishConfig" />
 		</mate:Injectors>
