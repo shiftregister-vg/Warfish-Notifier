@@ -18,15 +18,14 @@ package managers
 	
 	import mx.controls.Alert;
 
-	public class UpdateManager extends EventDispatcher
+	public class UpdateManager extends ManagerBase
 	{
-		public var manifestURL:String;
+		private var manifestURL:String = "http://update.slantsoft.com/warfishnotification/manifest.xml";
 		private var manifest:XML;
 		private var appUpdater:ApplicationUpdaterUI = new ApplicationUpdaterUI();
-		private var dispatcher:Dispatcher = new Dispatcher();
 		
 		public function UpdateManager(){
-			
+			trace("UpdateManager Constructor");
 		}
 		
 		public function checkForUpdate():void{
@@ -47,21 +46,28 @@ package managers
 		}
 		
 		public function manualCheckForUpdate():void{
-			 var urlRequest:URLRequest = new URLRequest(manifestURL + "?" + Math.random() + "=" + Math.random());
-			 urlRequest.contentType = "text/xml";
-			 urlRequest.method = URLRequestMethod.GET;
-			 var loader:URLLoader = new URLLoader();
-			 loader.addEventListener(Event.COMPLETE,onManualCheckForUpdateRequestComplete);
-			 loader.load(urlRequest);
+			if (!manifestURL){
+				var manifestError:Error = new Error("manifestURL was not supplied");
+				throw manifestError;
+			} else { 
+				var urlRequest:URLRequest = new URLRequest(manifestURL + "?" + Math.random() + "=" + Math.random());
+				urlRequest.contentType = "text/xml";
+				urlRequest.method = URLRequestMethod.GET;
+				var loader:URLLoader = new URLLoader();
+				loader.addEventListener(Event.COMPLETE,onManualCheckForUpdateRequestComplete);
+				trace("getting manifest");
+				loader.load(urlRequest);
+			}
 		}
 		
 		private function onManualCheckForUpdateRequestComplete(event:Event):void{
+			trace("request complete");
 			var loader:URLLoader = URLLoader(event.target);
 			var xmlnsPattern:RegExp = new RegExp("xmlns[^\"]*\"[^\"]*\"", "gi");
 			manifest = XML(XML(loader.data).toXMLString().replace(xmlnsPattern,""));
-			
+			trace("version: " + manifest.version);
 			if (manifest.version <= getAppVersion()){
-				dispatcher.dispatchEvent(new UpdateManagerEvent(UpdateManagerEvent.NO_UPDATE_AVAILABLE));
+				dispatchEvent(new UpdateManagerEvent(UpdateManagerEvent.NO_UPDATE_AVAILABLE));
 			} else {
 				checkForUpdate();
 			}

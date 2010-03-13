@@ -15,11 +15,10 @@ package managers
 	import vo.WarfishConfig;
 
 	
-	public class IconMenuManager extends EventDispatcher
+	public class IconMenuManager extends ManagerBase
 	{
 		private var __iconMenu:NativeMenu;
 		public var warfishConfig:WarfishConfig;
-		private var dispatcher:Dispatcher = new Dispatcher();
 		
 		public function IconMenuManager(_iconMenu:NativeMenu=null){
 			if (_iconMenu){
@@ -57,12 +56,12 @@ package managers
 			
 			var configCommand:NativeMenuItem = iconMenu.addItem(new NativeMenuItem("Configure"));
 			configCommand.addEventListener(Event.SELECT,function(event:Event):void{
-				dispatcher.dispatchEvent(new IconMenuEvent(IconMenuEvent.CONFIG_MENU_SELECTED));
+				dispatchEvent(new IconMenuEvent(IconMenuEvent.CONFIG_MENU_SELECTED));
 			});
 			
 			var exitCommand:NativeMenuItem = iconMenu.addItem(new NativeMenuItem("Exit"));
 			exitCommand.addEventListener(Event.SELECT,function(event:Event):void{
-				dispatcher.dispatchEvent(new IconMenuEvent(IconMenuEvent.EXIT_MENU_SELECTED));
+				dispatchEvent(new IconMenuEvent(IconMenuEvent.EXIT_MENU_SELECTED));
 				NativeApplication.nativeApplication.icon.bitmaps = [];
 				NativeApplication.nativeApplication.exit();
 			});

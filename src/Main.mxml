@@ -5,6 +5,7 @@
 					   creationComplete="onCreationComplete()" xmlns:eventMaps="eventMaps.*">
 	<fx:Script>
 		<![CDATA[
+			import events.AppEvent;
 			import events.ConfigEvent;
 			
 			import flash.display.NativeMenuItem;
@@ -61,16 +62,13 @@
 				
 				if (!warfishConfig.rssURL.length){
 					dispatchEvent(new ConfigEvent(ConfigEvent.OPEN_CONFIG_WINDOW));
-				}
-				
-				updateManager.manifestURL = "http://update.slantsoft.com/warfishnotification/manifest.xml";
-				updateManager.checkForUpdate();
+				}				
 				
 				var updateInterval:int = setInterval(function(event:Event=null):void{
 					updateManager.checkForUpdate();
 				},7200000);
 				
-				dispatchEvent(new Event("ApplicationCreationComplete",true));
+				dispatchEvent(new AppEvent(AppEvent.CREATION_COMPLETE));
 			}
 			
 			private function iconLoadComplete(event:Event):void {

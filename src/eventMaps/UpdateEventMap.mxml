@@ -18,16 +18,17 @@
 	<fx:Declarations>
 		<mate:Debugger level="{Debugger.ALL}"/>
 		
-		<mate:EventHandlers type="{ConfigEvent.OPEN_CONFIG_WINDOW}">
-			<mate:MethodInvoker generator="{WindowManager}" method="openConfigWindow" />
+		<mate:EventHandlers type="{UpdateManagerEvent.AUTO_CHECK_FOR_UPDATE}">
+			<mate:MethodInvoker generator="{UpdateManager}" method="checkForUpdate" />
 		</mate:EventHandlers>
 		
-		<mate:EventHandlers type="{ConfigEvent.DISABLE_CHECK_FOR_UPDATE_BUTTON}" debug="true">
-			<mate:MethodInvoker generator="{ConfigWindow}" method="noUpdateAvailable" />
+		<mate:EventHandlers type="{UpdateManagerEvent.NO_UPDATE_AVAILABLE}" debug="true">
+			<mate:EventAnnouncer generator="{ConfigEvent}" type="{ConfigEvent.DISABLE_CHECK_FOR_UPDATE_BUTTON}" />
 		</mate:EventHandlers>
 		
-		<mate:EventHandlers type="{ConfigEvent.CONFIG_WINDOW_CLOSED}">
-			<mate:MethodInvoker generator="{AlertManager}" method="setupAlertInterval" />
+		<mate:EventHandlers type="{UpdateManagerEvent.CHECK_FOR_UPDATE_MANUAL}" debug="true">
+			<mate:MethodInvoker generator="{UpdateManager}" method="manualCheckForUpdate" />
 		</mate:EventHandlers>
+		
 	</fx:Declarations>
 </mate:EventMap>

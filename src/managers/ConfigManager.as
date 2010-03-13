@@ -8,7 +8,7 @@ package managers
 	
 	import vo.WarfishConfig;
 	
-	public class ConfigManager extends EventDispatcher
+	public class ConfigManager extends ManagerBase
 	{
 		private var _warfishConfig:WarfishConfig;
 		private var _configWindow:ConfigWindow;
@@ -24,20 +24,6 @@ package managers
 		[Bindable (Event="ValueChanged")]
 		public function get warfishConfig():WarfishConfig{
 			return _warfishConfig;
-		}
-		
-		public function openConfigWindow():void{
-			if (!_configWindow || _configWindow.closed){
-				_configWindow = new ConfigWindow();
-			}
-			
-			//configWindow.warfishConfig = warfishConfig;
-			//_configWindow.updateManager = updateManager;
-			_configWindow.addEventListener("configSettingsSaved",function(event:Event):void{
-				
-			});
-			_configWindow.open();
-			_configWindow.activate();
 		}
 	}
 }

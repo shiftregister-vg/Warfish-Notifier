@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mate:EventMap xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		 xmlns:s="library://ns.adobe.com/flex/spark" 
-		 xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:mate="http://mate.asfusion.com/">
+		 xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:mate="http://mate.asfusion.com/" xmlns:eventMaps="eventMaps.*">
 	<fx:Script>
 		<![CDATA[
+			import events.AppEvent;
 			import events.ConfigEvent;
 			import events.IconMenuEvent;
 			import events.UpdateManagerEvent;
@@ -19,25 +20,20 @@
 	</fx:Script>
 	<fx:Declarations>
 		
+		<eventMaps:ConfigEventMap />
+		<eventMaps:IconMenuEventMap />
+		
+		
 		<mate:Debugger level="{Debugger.ALL}"/>
 		
-	<!-- handlers -->
-		<mate:EventHandlers type="ApplicationCreationComplete">
+		<!-- handlers -->
+		<mate:EventHandlers type="{AppEvent.CREATION_COMPLETE}">
 			<mate:MethodInvoker generator="{IconMenuManager}" method="buildIconMenu" />
+			<mate:EventAnnouncer generator="{UpdateManagerEvent}" type="{UpdateManagerEvent.AUTO_CHECK_FOR_UPDATE}" />
 		</mate:EventHandlers>
 		
-		<!-- IconMenuEvent -->
 		
-		<mate:EventHandlers type="{IconMenuEvent.CONFIG_MENU_SELECTED}">
-			<mate:EventAnnouncer generator="{ConfigEvent}" type="{ConfigEvent.OPEN_CONFIG_WINDOW}" />
-		</mate:EventHandlers>
-		
-		<!-- ConfigEvent -->
-		<mate:EventHandlers type="{ConfigEvent.OPEN_CONFIG_WINDOW}">
-			<mate:MethodInvoker generator="{ConfigManager}" method="openConfigWindow" />
-		</mate:EventHandlers>
-		
-	<!-- property injectors -->
+		<!-- property injectors -->
 		<mate:Injectors targets="{[Main,AlertBubble,ConfigWindow,AlertManager,IconMenuManager]}">
 			<mate:PropertyInjector source="{ConfigManager}" sourceKey="warfishConfig" targetKey="warfishConfig" />
 		</mate:Injectors>
