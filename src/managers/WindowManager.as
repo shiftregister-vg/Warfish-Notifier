@@ -17,6 +17,14 @@ package managers
 		
 		public function openAlertWindow():void{
 			
+			if (!alertBubble || alertBubble.closed){
+				alertBubble = new AlertBubble();
+				alertBubble.open();
+			}
+			
+			//alertBubble.addEventListener(AIREvent.WINDOW_ACTIVATE,playSound);
+			alertBubble.open();
+			alertBubble.activate();
 		}
 		
 		public function openConfigWindow():void{

@@ -36,10 +36,8 @@
 			private var interval:int;
 			private var bubbleInterval:int;
 			private var rssXML:XML;
-			[Bindable][Embed(source="/assets/sound/take-your-damn-warfish-turn.mp3")]
-			private var alertSoundClass:Class;
-			private var soundEmbed:Sound = new alertSoundClass() as Sound;
-			private var soundChannel:SoundChannel;
+			
+			
 			private var iconMenuManager:IconMenuManager;
 			private var updateManager:UpdateManager;
 			private var alertBubble:AlertBubble;
@@ -49,22 +47,14 @@
 			[Bindable] public var warfishConfig:WarfishConfig;
 			
 			private function onCreationComplete():void{
-				
-				//iconMenuManager = new IconMenuManager(iconMenu);
-				//updateManager = new UpdateManager();
-				//alertBubble = new AlertBubble();
-				
+							
 				NativeApplication.nativeApplication.autoExit = false;
 				
-				startInterval();
+				//startInterval();
 				
 				if (!warfishConfig.rssURL.length){
 					dispatchEvent(new ConfigEvent(ConfigEvent.OPEN_CONFIG_WINDOW));
-				}				
-				
-				var updateInterval:int = setInterval(function(event:Event=null):void{
-					updateManager.checkForUpdate();
-				},7200000);
+				}
 				
 				dispatchEvent(new AppEvent(AppEvent.CREATION_COMPLETE));
 			}
@@ -74,47 +64,7 @@
 			 * TODO: onConfigWindowClose() needs to be moved to the alert manager
 			 **/
 			private function onConfigWindowClose():void{
-				startInterval();
-			}
-			/**
-			 * TODO: startInterval() needs to be moved to the alert manager
-			 **/
-			private function startInterval():void{
-				if (interval){
-					clearInterval(interval);
-				}
-				if (warfishConfig.rssURL.length){
-					interval = setInterval(onTick,30000);
-				}
-				if (bubbleInterval){
-					clearInterval(bubbleInterval);
-					bubbleInterval = 0;
-					bubbleInterval = setInterval(showAlert,warfishConfig.bubbleInterval);
-				}
-			}
-			
-			private function onTick():void{
-				
-			}
-			
-			
-			
-			private function playSound(event:Event=null):void{
-				if (warfishConfig.playSound){
-					SoundMixer.soundTransform = new SoundTransform(1);
-					soundChannel = soundEmbed.play();
-				}
-			}
-			
-			private function showAlert():void{
-				if (bubbleInterval){
-					clearInterval(bubbleInterval);
-					bubbleInterval = 0;
-				}
-				
-				alertBubble.addEventListener(AIREvent.WINDOW_ACTIVATE,playSound);
-				alertBubble.open();
-				alertBubble.activate();
+				//startInterval();
 			}
 		]]>
 	</fx:Script>

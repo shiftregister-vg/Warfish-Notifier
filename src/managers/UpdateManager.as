@@ -15,6 +15,7 @@ package managers
 	import flash.net.URLLoader;
 	import flash.net.URLRequest;
 	import flash.net.URLRequestMethod;
+	import flash.utils.setInterval;
 	
 	import mx.controls.Alert;
 
@@ -25,7 +26,9 @@ package managers
 		private var appUpdater:ApplicationUpdaterUI = new ApplicationUpdaterUI();
 		
 		public function UpdateManager(){
-			trace("UpdateManager Constructor");
+			var updateInterval:int = setInterval(function(event:Event=null):void{
+				checkForUpdate();
+			},7200000);
 		}
 		
 		public function checkForUpdate():void{

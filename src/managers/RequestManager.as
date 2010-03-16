@@ -19,10 +19,25 @@ package managers
 	{
 		public var warfishConfig:WarfishConfig;
 		private var rssXML:XML;
+		private var requestDelay:int = 30000;
+		private var requestInterval:int;
 		private var bubbleInterval:int;
 		
 		public function RequestManager(){
 			
+		}
+		
+		public function startRequestInterval():void{
+			if (warfishConfig.rssURL.length){
+				requestInterval = setInterval(function():void{
+					getRSSFeed();
+				},requestDelay);
+			}
+		}
+		
+		public function stopRequestInterval():void{
+			clearInterval(requestInterval);
+			requestInterval = 0;
 		}
 		
 		public function getRSSFeed():void{
