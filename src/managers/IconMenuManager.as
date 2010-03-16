@@ -4,38 +4,32 @@ package managers
 	
 	import events.IconMenuEvent;
 	
+	import flash.desktop.DockIcon;
 	import flash.desktop.NativeApplication;
+	import flash.desktop.SystemTrayIcon;
+	import flash.display.Loader;
 	import flash.display.NativeMenu;
 	import flash.display.NativeMenuItem;
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	import flash.net.URLRequest;
 	import flash.net.navigateToURL;
+	import flash.utils.clearInterval;
+	import flash.utils.setInterval;
 	
 	import vo.WarfishConfig;
 
 	
 	public class IconMenuManager extends ManagerBase
 	{
-		private var __iconMenu:NativeMenu;
+		private var iconMenu:NativeMenu = new NativeMenu();
+		private var icon:Loader = new Loader();
+		private var iconBlinkInterval:int;
+		private var iconIsBlue:Boolean = true;
 		public var warfishConfig:WarfishConfig;
 		
-		public function IconMenuManager(_iconMenu:NativeMenu=null){
-			if (_iconMenu){
-				iconMenu = _iconMenu;
-			} else {
-				iconMenu = new NativeMenu();
-			}
-		}
-		
-		[Bindable (Event="valueChanged")]
-		public function get iconMenu():NativeMenu{
-			return __iconMenu;
-		}
-		
-		public function set iconMenu(value:NativeMenu):void{
-			__iconMenu = value;
-			dispatchEvent(new Event("valueChanged"));
+		public function IconMenuManager(){
+			
 		}
 		
 		public function buildIconMenu():void{
@@ -70,6 +64,8 @@ package managers
 			
 			var versionMenu:NativeMenuItem = iconMenu.addItem(new NativeMenuItem("Version " + getAppVersion()));
 			versionMenu.enabled = false;
+			
+			setIcon();
 		}
 		
 		public function addMenuItemAt(_menuItem:NativeMenuItem,_position:Number,_removeDuplicate:Boolean=true):void{
@@ -98,6 +94,50 @@ package managers
 			var ns:Namespace = appXml.namespace();
 			var appVersion:String = appXml.ns::version[0];
 			return appVersion;
+		}
+		
+		public function setIcon(iconName:String="",tooltip:String=""):void{
+			if (NativeApplication.supportsSystemTrayIcon) {
+				NativeApplication.nativeApplication.autoExit = false;
+				icon.contentLoaderInfo.addEventListener(Event.COMPLETE, iconLoadComplete);
+				icon.load(new URLRequest("assets/icon/warfish" + iconName + "-16.png"));
+				
+				var systray:SystemTrayIcon = NativeApplication.nativeApplication.icon as SystemTrayIcon;
+				systray.tooltip = "Warfish Notifier" + tooltip;
+				systray.menu = iconMenu;
+			}
+			
+			if (NativeApplication.supportsDockIcon){
+				icon.contentLoaderInfo.addEventListener(Event.COMPLETE,iconLoadComplete);
+				icon.load(new URLRequest("assets/icon/warfish" + iconName + "-128.png"));
+				var dock:DockIcon = NativeApplication.nativeApplication.icon as DockIcon; 
+				dock.menu = iconMenu;
+			}
+		}
+		
+		private function iconLoadComplete(event:Event):void {
+			NativeApplication.nativeApplication.icon.bitmaps =
+				[event.target.content.bitmapData];
+		}
+		
+		public function blinkIcon():void{
+			if (!iconBlinkInterval){
+				iconBlinkInterval = setInterval(function():void{
+					if (iconIsBlue){
+						setIcon("-red"," - It's your turn!");
+					} else {
+						setIcon(""," - It's your turn!");
+					}
+					iconIsBlue = !iconIsBlue;
+				},500);
+			}
+		}
+		
+		public function stopIconBlink():void{
+			if(iconBlinkInterval){
+				clearInterval(iconBlinkInterval);
+				iconBlinkInterval = 0;
+			}
 		}
 	}
 }

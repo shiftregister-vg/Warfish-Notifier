@@ -7,6 +7,7 @@
 		<![CDATA[
 			import events.AppEvent;
 			import events.ConfigEvent;
+			import events.IconMenuEvent;
 			
 			import flash.display.NativeMenuItem;
 			import flash.events.Event;
@@ -32,8 +33,6 @@
 			
 			import vo.WarfishConfig;
 			
-			private var icon:Loader = new Loader();
-			public var iconMenu:NativeMenu;
 			private var interval:int;
 			private var bubbleInterval:int;
 			private var rssXML:XML;
@@ -51,13 +50,12 @@
 			
 			private function onCreationComplete():void{
 				
-				iconMenuManager = new IconMenuManager(iconMenu);
-				updateManager = new UpdateManager();
-				alertBubble = new AlertBubble();
+				//iconMenuManager = new IconMenuManager(iconMenu);
+				//updateManager = new UpdateManager();
+				//alertBubble = new AlertBubble();
 				
 				NativeApplication.nativeApplication.autoExit = false;
-								
-				setIcon();
+				
 				startInterval();
 				
 				if (!warfishConfig.rssURL.length){
@@ -71,10 +69,7 @@
 				dispatchEvent(new AppEvent(AppEvent.CREATION_COMPLETE));
 			}
 			
-			private function iconLoadComplete(event:Event):void {
-				NativeApplication.nativeApplication.icon.bitmaps =
-					[event.target.content.bitmapData];
-			}
+			
 			/**
 			 * TODO: onConfigWindowClose() needs to be moved to the alert manager
 			 **/
@@ -99,91 +94,10 @@
 			}
 			
 			private function onTick():void{
-				var urlRequest:URLRequest = new URLRequest(warfishConfig.rssURL);
-					urlRequest.contentType = "text/xml";
-					urlRequest.method = URLRequestMethod.GET;
-				var loader:URLLoader = new URLLoader();
-					loader.addEventListener(Event.COMPLETE,onRequestComplete);
-					loader.load(urlRequest);
+				
 			}
 			
-			private function onRequestComplete(event:Event):void{
-				var loader:URLLoader = URLLoader(event.target);
-				rssXML = XML(loader.data);
-				
-				var isTurn:Boolean = false;
-				if (rssXML..item.length() > 1){
-					isTurn = true;
-				}
-				
-				if (!isTurn){
-					if (iconBlinkInterval){
-						clearInterval(iconBlinkInterval);
-						iconBlinkInterval = 0;
-					}
-					
-					setIcon();
-					iconMenuManager.removeMenuByLabel("Games");
-					if (bubbleInterval){
-						clearInterval(bubbleInterval);
-					}
-				} else {
-					var gamesMenuItem:NativeMenuItem = new NativeMenuItem("Games");
-					var gamesMenu:NativeMenu = new NativeMenu();
-					for (var i:int = 0; i < rssXML..item.length(); i++){
-						if (rssXML..item[i].title.toString() != "View Your Turn Games list"){
-							var gameMenu:NativeMenuItem = gamesMenu.addItem(new NativeMenuItem(rssXML..item[i].title.toString().replace(" [Your turn]","")));
-							gameMenu.data = {url:rssXML..item[i].link.toString()};
-							gameMenu.addEventListener(Event.SELECT,function(event:Event):void{
-								navigateToURL(new URLRequest(event.target.data.url));
-							});
-						}
-					}
-					if (gamesMenu.items.length){
-						gamesMenuItem.submenu = gamesMenu;
-						iconMenuManager.addMenuItemAt(gamesMenuItem,1);
-					}
-					
-					if (warfishConfig.blinkIconOnTurn){
-						if (!iconBlinkInterval){
-							iconBlinkInterval = setInterval(function():void{
-								if (iconIsBlue){
-									setIcon("-red"," - It's your turn!");
-								} else {
-									setIcon(""," - It's your turn!");
-								}
-								iconIsBlue = !iconIsBlue;
-							},500);
-						}
-					} else {
-						setIcon("-red"," - It's your turn!");
-					}
-					
-					if (!bubbleInterval){
-						showAlert();
-						bubbleInterval = setInterval(showAlert,warfishConfig.bubbleInterval);
-					}
-				}
-			}
 			
-			private function setIcon(iconName:String="",tooltip:String=""):void{
-				if (NativeApplication.supportsSystemTrayIcon) {
-					NativeApplication.nativeApplication.autoExit = false;
-					icon.contentLoaderInfo.addEventListener(Event.COMPLETE, iconLoadComplete);
-					icon.load(new URLRequest("assets/icon/warfish" + iconName + "-16.png"));
-					
-					var systray:SystemTrayIcon = NativeApplication.nativeApplication.icon as SystemTrayIcon;
-					systray.tooltip = "Warfish Notifier" + tooltip;
-					systray.menu = iconMenu;
-				}
-				
-				if (NativeApplication.supportsDockIcon){
-					icon.contentLoaderInfo.addEventListener(Event.COMPLETE,iconLoadComplete);
-					icon.load(new URLRequest("assets/icon/warfish" + iconName + "-128.png"));
-					var dock:DockIcon = NativeApplication.nativeApplication.icon as DockIcon; 
-					dock.menu = iconMenu;
-				}
-			}
 			
 			private function playSound(event:Event=null):void{
 				if (warfishConfig.playSound){

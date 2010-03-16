@@ -12,6 +12,7 @@
 			import managers.AlertManager;
 			import managers.ConfigManager;
 			import managers.IconMenuManager;
+			import managers.RequestManager;
 			import managers.UpdateManager;
 			
 			import views.AlertBubble;
@@ -34,12 +35,8 @@
 		
 		
 		<!-- property injectors -->
-		<mate:Injectors targets="{[Main,AlertBubble,ConfigWindow,AlertManager,IconMenuManager]}">
+		<mate:Injectors targets="{[Main,AlertBubble,ConfigWindow,AlertManager,IconMenuManager,RequestManager]}">
 			<mate:PropertyInjector source="{ConfigManager}" sourceKey="warfishConfig" targetKey="warfishConfig" />
-		</mate:Injectors>
-		
-		<mate:Injectors targets="{[Main,IconMenuManager]}">
-			<mate:PropertyInjector source="{IconMenuManager}" sourceKey="iconMenu" targetKey="iconMenu" />
 		</mate:Injectors>
 		
 	</fx:Declarations>
