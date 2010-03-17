@@ -27,6 +27,7 @@
 		<eventMaps:ConfigEventMap />
 		<eventMaps:IconMenuEventMap />
 		<eventMaps:RequestManagerEventMap />
+		<eventMaps:SoundManagerEventMap />
 		<eventMaps:UpdateManagerEventMap />
 		
 		

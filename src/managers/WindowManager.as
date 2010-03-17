@@ -4,11 +4,13 @@ package managers
 	
 	import views.AlertBubble;
 	import views.ConfigWindow;
+	import views.SoundManagerWindow;
 	
 	public class WindowManager extends ManagerBase
 	{
 		private var alertBubble:AlertBubble;
 		private var configWindow:ConfigWindow;
+		private var soundManagerWindow:SoundManagerWindow;
 		
 		public function WindowManager(target:IEventDispatcher=null)
 		{
@@ -22,7 +24,6 @@ package managers
 				alertBubble.open();
 			}
 			
-			//alertBubble.addEventListener(AIREvent.WINDOW_ACTIVATE,playSound);
 			alertBubble.open();
 			alertBubble.activate();
 		}
@@ -33,6 +34,14 @@ package managers
 				configWindow.open();
 			}
 			configWindow.activate();
+		}
+		
+		public function openSoundManagerWindow():void{
+			if (!soundManagerWindow || soundManagerWindow.closed){
+				soundManagerWindow = new SoundManagerWindow();
+				soundManagerWindow.open();
+			}
+			soundManagerWindow.activate();
 		}
 	}
 }

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mate:EventMap xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" 
+			   xmlns:mx="library://ns.adobe.com/flex/mx"
+			   xmlns:mate="http://mate.asfusion.com/">
+	<fx:Script>
+		<![CDATA[
+			import events.SoundManagerEvent;
+			
+			import managers.WindowManager;
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		
+		<mate:EventHandlers type="{SoundManagerEvent.OPEN_SOUND_MANAGER_WINDOW}">
+			<mate:MethodInvoker generator="{WindowManager}" method="openSoundManagerWindow" />
+		</mate:EventHandlers>
+		
+	</fx:Declarations>
+</mate:EventMap>

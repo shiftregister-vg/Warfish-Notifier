@@ -35,7 +35,7 @@ package managers
 		public function buildIconMenu():void{
 			var websiteCommand:NativeMenuItem = iconMenu.addItem(new NativeMenuItem("Open Warfish"));
 			websiteCommand.addEventListener(Event.SELECT,function(event:Event):void{
-				dispatcher.dispatchEvent(new IconMenuEvent(IconMenuEvent.OPEN_WARFISH_SELECTED));
+				dispatchEvent(new IconMenuEvent(IconMenuEvent.OPEN_WARFISH_SELECTED));
 				navigateToURL(new URLRequest("http://warfish.net/war/play/"));
 			});
 			
@@ -43,7 +43,7 @@ package managers
 			
 			var soundCommand:NativeMenuItem = iconMenu.addItem(new NativeMenuItem("Enable Sound"));
 			soundCommand.addEventListener(Event.SELECT,function(event:Event):void{
-				dispatcher.dispatchEvent(new IconMenuEvent(IconMenuEvent.ENABLE_SOUND_SELECTED));
+				dispatchEvent(new IconMenuEvent(IconMenuEvent.ENABLE_SOUND_SELECTED));
 				warfishConfig.playSound = event.target.checked = !event.target.checked;
 			});
 			soundCommand.checked=warfishConfig.playSound;

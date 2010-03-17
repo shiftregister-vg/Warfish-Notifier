@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Window xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		  xmlns:s="library://ns.adobe.com/flex/spark" 
+		  xmlns:mx="library://ns.adobe.com/flex/mx"
+		  width="425" height="300" showStatusBar="false" maximizable="false" minimizable="false"
+		  systemChrome="none" transparent="true" backgroundColor="#000000" backgroundAlpha="0"
+		  creationComplete="onCreationComplete()" xmlns:mate="http://mate.asfusion.com/"
+		  title="Sound Manager - Warfish Turn Notifier">
+	<s:layout>
+		<s:VerticalLayout/>
+	</s:layout>
+	
+	<fx:Script>
+		<![CDATA[
+			import com.asfusion.mate.ioc.InjectorRegistry;
+			
+			private function onCreationComplete():void{
+				InjectorRegistry.register(this);
+				
+				nativeWindow.x = (Capabilities.screenResolutionX - nativeWindow.width) / 2;
+				nativeWindow.y = (Capabilities.screenResolutionY - nativeWindow.height) / 2;
+				
+				tw.moveArea.addEventListener(MouseEvent.MOUSE_DOWN,startMove);
+			}
+			
+			private function startMove(event:MouseEvent):void{
+				stage.nativeWindow.startMove();
+			}
+		]]>
+	</fx:Script>
+	
+	<s:TitleWindow id="tw" left="15" title="Sound Manager" width="400" height="300" top="10" alpha="0.9" close="this.close()">
+		<s:layout>
+			<s:HorizontalLayout horizontalAlign="left" paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="10" />
+		</s:layout>
+	</s:TitleWindow>
+	
+	<fx:Declarations>
+		<mate:Dispatcher id="dispatcher"/>
+	</fx:Declarations>
+</s:Window>

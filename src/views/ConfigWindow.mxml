@@ -3,13 +3,15 @@
 		  xmlns:s="library://ns.adobe.com/flex/spark" maximizable="false" minimizable="false"
 		  xmlns:mx="library://ns.adobe.com/flex/mx" width="475" height="330" resizable="false"
 		  creationComplete="onCreationComplete()" systemChrome="none" transparent="true"
-		  showStatusBar="false" title="Warfish Notifier Configuration" backgroundColor="#000000" backgroundAlpha="0" xmlns:eventMaps="eventMaps.*" xmlns:mate="http://mate.asfusion.com/">
+		  showStatusBar="false" title="Configuration - Warfish Notifier" backgroundColor="#000000" backgroundAlpha="0"
+		  xmlns:mate="http://mate.asfusion.com/">
 	
 	<fx:Script>
 		<![CDATA[
 			import com.asfusion.mate.ioc.InjectorRegistry;
 			
 			import events.ConfigEvent;
+			import events.SoundManagerEvent;
 			import events.UpdateManagerEvent;
 			
 			import flash.events.MouseEvent;
@@ -49,7 +51,7 @@
 				alertColorPicker.selectedColor = warfishConfig.alertColor;
 				blinkIconCbox.selected = warfishConfig.blinkIconOnTurn;
 				
-				panel.titleDisplay.addEventListener(MouseEvent.MOUSE_DOWN,startMove);
+				panel.moveArea.addEventListener(MouseEvent.MOUSE_DOWN,startMove);
 			}
 			
 			private function checkForUpdate():void{
@@ -78,7 +80,7 @@
 		]]>
 	</fx:Script>
 	
-	<s:Panel id="panel" left="15" title="Configuration" width="450" height="300" alpha="0.9" top="10">
+	<s:TitleWindow id="panel" left="15" title="Configuration" width="450" height="300" alpha="0.9" top="10" close="this.close()">
 		<s:layout>
 			<s:VerticalLayout horizontalAlign="left" paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="10" />
 		</s:layout>
@@ -99,6 +101,10 @@
 			<mx:FormItem width="100%" color="#000000">
 				<s:CheckBox id="blinkIconCbox" label="Blink Tray / Dock Icon" />
 			</mx:FormItem>
+			<mx:FormItem label="Alert Sound" width="100%" color="#000000" direction="horizontal">
+				<s:ComboBox id="cmb_soundSelect"/>
+				<s:Button label="Manage Sounds" click="dispatcher.dispatchEvent(new SoundManagerEvent(SoundManagerEvent.OPEN_SOUND_MANAGER_WINDOW));" />
+			</mx:FormItem>
 			<mx:FormItem width="100%">
 				<s:Button id="btn_checkForUpdate" label="{updateBtnLbl}" click="checkForUpdate()" />
 			</mx:FormItem>
@@ -107,9 +113,8 @@
 			<s:Button id="btn_saveSettings" label="Save Settings" click="btn_saveSettings_clickHandler(event)" />
 			<s:Button label="Cancel" click="this.close()"/>
 		</s:HGroup>
-	</s:Panel>
+	</s:TitleWindow>
 	<fx:Declarations>
-		<eventMaps:ConfigEventMap />
 		<mate:Dispatcher id="dispatcher"/>
 	</fx:Declarations>
 </s:Window>
