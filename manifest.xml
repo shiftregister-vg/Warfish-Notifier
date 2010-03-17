@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <update xmlns="http://ns.adobe.com/air/framework/update/description/1.0">
-	<version>1.7</version>
-	<url>http://update.slantsoft.com/warfishnotification/WarfishTurnNotification-1.7.air</url>
+	<version>1.8</version>
+	<url>http://update.slantsoft.com/warfishnotification/WarfishTurnNotification-1.8.air</url>
 	<description><![CDATA[
-* Added blinking icon to indicate when a player has turns. This is configurable and can be turned off in the config panel.
-* Added a button in the config panel to manually check for updates.  The app will also check for updates every 2 hours while running.
-* More fixes to the adjustable alert popup delay. It might be working this time!
+* Alert sound can now be customized. Just pick the mp3 file that you want to play in the config window.
+* Alert window bug fixes.
+* Architecture of the app has been completely redesigned.
 	]]></description>
 </update>
