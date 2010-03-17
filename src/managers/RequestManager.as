@@ -1,6 +1,7 @@
 package managers
 {
 	import events.IconMenuEvent;
+	import events.RequestManagerEvent;
 	
 	import flash.display.NativeMenu;
 	import flash.display.NativeMenuItem;
@@ -13,6 +14,8 @@ package managers
 	import flash.utils.clearInterval;
 	import flash.utils.setInterval;
 	
+	import mx.core.Window;
+	
 	import vo.WarfishConfig;
 	
 	public class RequestManager extends ManagerBase
@@ -21,7 +24,6 @@ package managers
 		private var rssXML:XML;
 		private var requestDelay:int = 30000;
 		private var requestInterval:int;
-		private var bubbleInterval:int;
 		
 		public function RequestManager(){
 			
@@ -41,12 +43,14 @@ package managers
 		}
 		
 		public function getRSSFeed():void{
-			var urlRequest:URLRequest = new URLRequest(warfishConfig.rssURL);
-			urlRequest.contentType = "text/xml";
-			urlRequest.method = URLRequestMethod.GET;
-			var loader:URLLoader = new URLLoader();
-			loader.addEventListener(Event.COMPLETE,onRequestComplete);
-			loader.load(urlRequest);
+			if (warfishConfig && warfishConfig.rssURL.length){
+				var urlRequest:URLRequest = new URLRequest(warfishConfig.rssURL);
+				urlRequest.contentType = "text/xml";
+				urlRequest.method = URLRequestMethod.GET;
+				var loader:URLLoader = new URLLoader();
+				loader.addEventListener(Event.COMPLETE,onRequestComplete);
+				loader.load(urlRequest);
+			}
 		}
 		
 		private function onRequestComplete(event:Event):void{
@@ -61,16 +65,13 @@ package managers
 			
 			if (!isTurn){
 				
-				
 				dispatchEvent(new IconMenuEvent(IconMenuEvent.SET_ICON));
 				
 				e = new IconMenuEvent(IconMenuEvent.REMOVE_MENU_BY_LABEL);
 				e.menuLabel = "Games";
 				dispatchEvent(e);
 				
-				if (bubbleInterval){
-					clearInterval(bubbleInterval);
-				}
+				dispatchEvent(new RequestManagerEvent(RequestManagerEvent.NO_TURNS));
 			} else {
 				var gamesMenuItem:NativeMenuItem = new NativeMenuItem("Games");
 				var gamesMenu:NativeMenu = new NativeMenu();
@@ -93,8 +94,6 @@ package managers
 				
 				if (warfishConfig.blinkIconOnTurn){
 					dispatchEvent(new IconMenuEvent(IconMenuEvent.BLINK_ICON));
-					
-					
 				} else {
 					e = new IconMenuEvent(IconMenuEvent.SET_ICON);
 					e.iconName = "-red";
@@ -102,15 +101,8 @@ package managers
 					dispatchEvent(e);
 				}
 				
-				if (!bubbleInterval){
-					showAlert();
-					bubbleInterval = setInterval(showAlert,warfishConfig.bubbleInterval);
-				}
+				dispatchEvent(new RequestManagerEvent(RequestManagerEvent.HAS_TURNS));
 			}
-		}
-		
-		private function showAlert():void{
-			
 		}
 	}
 }

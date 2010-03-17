@@ -6,65 +6,12 @@
 	<fx:Script>
 		<![CDATA[
 			import events.AppEvent;
-			import events.ConfigEvent;
-			import events.IconMenuEvent;
-			
-			import flash.display.NativeMenuItem;
-			import flash.events.Event;
-			import flash.media.Sound;
-			import flash.media.SoundChannel;
-			import flash.media.SoundMixer;
-			import flash.media.SoundTransform;
-			import flash.net.URLLoader;
-			import flash.net.URLRequest;
-			import flash.net.URLRequestMethod;
-			import flash.net.navigateToURL;
-			import flash.utils.clearInterval;
-			import flash.utils.setInterval;
-			
-			import managers.IconMenuManager;
-			import managers.UpdateManager;
-			
-			import mx.events.AIREvent;
-			import mx.states.AddItems;
-			
-			import views.AlertBubble;
-			import views.ConfigWindow;
-			
 			import vo.WarfishConfig;
-			
-			private var interval:int;
-			private var bubbleInterval:int;
-			private var rssXML:XML;
-			
-			
-			private var iconMenuManager:IconMenuManager;
-			private var updateManager:UpdateManager;
-			private var alertBubble:AlertBubble;
-			private var iconBlinkInterval:int;
-			private var iconIsBlue:Boolean = true;
 			
 			[Bindable] public var warfishConfig:WarfishConfig;
 			
 			private function onCreationComplete():void{
-							
-				NativeApplication.nativeApplication.autoExit = false;
-				
-				//startInterval();
-				
-				if (!warfishConfig.rssURL.length){
-					dispatchEvent(new ConfigEvent(ConfigEvent.OPEN_CONFIG_WINDOW));
-				}
-				
 				dispatchEvent(new AppEvent(AppEvent.CREATION_COMPLETE));
-			}
-			
-			
-			/**
-			 * TODO: onConfigWindowClose() needs to be moved to the alert manager
-			 **/
-			private function onConfigWindowClose():void{
-				//startInterval();
 			}
 		]]>
 	</fx:Script>

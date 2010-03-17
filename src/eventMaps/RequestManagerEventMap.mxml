@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mate:EventMap xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" 
+			   xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:mate="http://mate.asfusion.com/">
+	<fx:Script>
+		<![CDATA[
+			import events.AlertEvent;
+			import events.IconMenuEvent;
+			import events.RequestManagerEvent;
+			
+			import managers.AlertManager;
+			import managers.RequestManager;
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<mate:Debugger level="{Debugger.ALL}"/>
+		
+		<mate:EventHandlers type="{RequestManagerEvent.START_REQUEST_INTERVAL}">
+			<mate:MethodInvoker generator="{RequestManager}" method="startRequestInterval" />
+		</mate:EventHandlers>
+		
+		<mate:EventHandlers type="{RequestManagerEvent.HAS_TURNS}">
+			<mate:MethodInvoker generator="{AlertManager}" method="showAlert" />
+		</mate:EventHandlers>
+		
+		<mate:EventHandlers type="{RequestManagerEvent.NO_TURNS}">
+			<mate:EventAnnouncer generator="{AlertEvent}" type="{AlertEvent.STOP_INTERVAL}" />
+			<mate:EventAnnouncer generator="{IconMenuEvent}" type="{IconMenuEvent.STOP_ICON_BLINK}" />
+		</mate:EventHandlers>
+		
+		<mate:EventHandlers type="{RequestManagerEvent.GET_TURNS_FEED}">
+			<mate:MethodInvoker generator="{RequestManager}" method="getRSSFeed" />
+		</mate:EventHandlers>
+		
+	</fx:Declarations>
+</mate:EventMap>

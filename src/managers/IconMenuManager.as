@@ -100,7 +100,7 @@ package managers
 			if (NativeApplication.supportsSystemTrayIcon) {
 				NativeApplication.nativeApplication.autoExit = false;
 				icon.contentLoaderInfo.addEventListener(Event.COMPLETE, iconLoadComplete);
-				icon.load(new URLRequest("assets/icon/warfish" + iconName + "-16.png"));
+				icon.load(new URLRequest("/assets/icon/warfish" + iconName + "-16.png"));
 				
 				var systray:SystemTrayIcon = NativeApplication.nativeApplication.icon as SystemTrayIcon;
 				systray.tooltip = "Warfish Notifier" + tooltip;
@@ -109,7 +109,7 @@ package managers
 			
 			if (NativeApplication.supportsDockIcon){
 				icon.contentLoaderInfo.addEventListener(Event.COMPLETE,iconLoadComplete);
-				icon.load(new URLRequest("assets/icon/warfish" + iconName + "-128.png"));
+				icon.load(new URLRequest("/assets/icon/warfish" + iconName + "-128.png"));
 				var dock:DockIcon = NativeApplication.nativeApplication.icon as DockIcon; 
 				dock.menu = iconMenu;
 			}
@@ -138,6 +138,7 @@ package managers
 				clearInterval(iconBlinkInterval);
 				iconBlinkInterval = 0;
 			}
+			setIcon();
 		}
 	}
 }

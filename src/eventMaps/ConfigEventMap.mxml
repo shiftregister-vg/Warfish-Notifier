@@ -4,6 +4,7 @@
 			   xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:mate="http://mate.asfusion.com/">
 	<fx:Script>
 		<![CDATA[
+			import events.AlertEvent;
 			import events.ConfigEvent;
 			import events.UpdateManagerEvent;
 			
@@ -27,7 +28,7 @@
 		</mate:EventHandlers>
 		
 		<mate:EventHandlers type="{ConfigEvent.CONFIG_WINDOW_CLOSED}">
-			<mate:MethodInvoker generator="{AlertManager}" method="setupAlertInterval" />
+			<mate:EventAnnouncer generator="{AlertEvent}" type="{AlertEvent.STOP_INTERVAL}" />
 		</mate:EventHandlers>
 	</fx:Declarations>
 </mate:EventMap>

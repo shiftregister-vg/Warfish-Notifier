@@ -19,15 +19,22 @@ package managers
 			super(target);
 		}
 		
-		public function showAlert(_useInterval:Boolean=true):void{
-			
+		public function showAlert():void{
+			if (!_alertInterval){
+				setupAlertInterval();
+				onAlertInterval();
+			}
 		}
 		
-		public function setupAlertInterval():void{
+		public function stopAlertInterval():void{
 			if (_alertInterval){
 				clearInterval(_alertInterval);
 				_alertInterval = 0;
+				setupAlertInterval();
 			}
+		}
+		
+		public function setupAlertInterval():void{
 			_alertInterval = setInterval(onAlertInterval,warfishConfig.bubbleInterval);
 		}
 		

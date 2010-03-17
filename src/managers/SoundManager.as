@@ -4,6 +4,7 @@ package managers
 	import flash.media.Sound;
 	import flash.media.SoundChannel;
 	import flash.media.SoundMixer;
+	import flash.media.SoundTransform;
 	
 	import vo.WarfishConfig;
 	

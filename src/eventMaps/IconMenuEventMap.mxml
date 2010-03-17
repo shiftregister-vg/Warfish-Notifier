@@ -7,6 +7,8 @@
 			import events.ConfigEvent;
 			import events.IconMenuEvent;
 			
+			import managers.IconMenuManager;
+			
 		]]>
 	</fx:Script>
 	<fx:Declarations>
@@ -14,6 +16,22 @@
 		
 		<mate:EventHandlers type="{IconMenuEvent.CONFIG_MENU_SELECTED}">
 			<mate:EventAnnouncer generator="{ConfigEvent}" type="{ConfigEvent.OPEN_CONFIG_WINDOW}" />
+		</mate:EventHandlers>
+		
+		<mate:EventHandlers type="{IconMenuEvent.BUILD_ICON_MENU}">
+			<mate:MethodInvoker generator="{IconMenuManager}" method="buildIconMenu" />
+		</mate:EventHandlers>
+		
+		<mate:EventHandlers type="{IconMenuEvent.BLINK_ICON}">
+			<mate:MethodInvoker generator="{IconMenuManager}" method="blinkIcon" />
+		</mate:EventHandlers>
+		
+		<mate:EventHandlers type="{IconMenuEvent.SET_ICON}">
+			<mate:MethodInvoker generator="{IconMenuManager}" method="setIcon" arguments="{[event.iconName,event.toolTip]}" />
+		</mate:EventHandlers>
+		
+		<mate:EventHandlers type="{IconMenuEvent.STOP_ICON_BLINK}">
+			<mate:MethodInvoker generator="{IconMenuManager}" method="stopIconBlink" />
 		</mate:EventHandlers>
 		
 	</fx:Declarations>

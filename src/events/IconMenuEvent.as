@@ -5,6 +5,7 @@ package events
 	
 	public class IconMenuEvent extends Event
 	{
+		public static const BUILD_ICON_MENU:String = "BuildIconMenuIconMenuEvent";
 		public static const EXIT_MENU_SELECTED:String = "ExitMenuSelectedIconMenuEvent";
 		public static const CONFIG_MENU_SELECTED:String = "ConfigMenuSelectedIconMenuEvent";
 		public static const OPEN_WARFISH_SELECTED:String = "OpenWarfishSelectedIconMenuEvent";

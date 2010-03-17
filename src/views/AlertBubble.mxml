@@ -4,10 +4,14 @@
 		  xmlns:mx="library://ns.adobe.com/flex/mx"
 		  width="335" height="25" showStatusBar="false" alwaysInFront="true"
 		  backgroundAlpha="0.65" creationComplete="init()" focusEnabled="false"
-		  color="#FFFFFF" type="lightweight" systemChrome="none" transparent="true">
+		  color="#FFFFFF" type="lightweight" systemChrome="none" transparent="true" xmlns:mate="http://mate.asfusion.com/">
 	
 	<fx:Script>
 		<![CDATA[
+			import com.asfusion.mate.ioc.InjectorRegistry;
+			
+			import events.AlertEvent;
+			
 			import flash.events.Event;
 			import flash.events.MouseEvent;
 			import flash.net.URLRequest;
@@ -20,15 +24,17 @@
 			public var warfishConfig:WarfishConfig;
 			
 			private function init():void{
+				InjectorRegistry.register(this);
 				var timer:int = setTimeout(closeBubble,10000);
 				nativeWindow.x = ( Screen.mainScreen.bounds.width - 340 );
 				nativeWindow.y = ( Screen.mainScreen.bounds.height - 70 );
 				this.addEventListener(MouseEvent.CLICK,onBubbleClick);
 				this.setStyle("backgroundColor",warfishConfig.alertColor);
+				dispatcher.dispatchEvent(new AlertEvent(AlertEvent.PLAY_SOUND));
 			}
 			
 			private function onBubbleClick(event:Event=null):void{
-				var warfishURL:String = "http://warfish.net/war/home";
+				var warfishURL:String = "http://warfish.net/war/play";
 				var urlRequest:URLRequest = new URLRequest(warfishURL);
 				navigateToURL(urlRequest);
 				closeBubble();
@@ -39,6 +45,10 @@
 			}
 		]]>
 	</fx:Script>
+	
+	<fx:Declarations>
+		<mate:Dispatcher id="dispatcher" />
+	</fx:Declarations>
 	
 	<s:layout>
 		<s:HorizontalLayout paddingLeft="5" paddingRight="5" paddingTop="5" paddingBottom="5" verticalAlign="middle" horizontalAlign="center"/>
