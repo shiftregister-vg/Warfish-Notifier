@@ -15,12 +15,13 @@ package managers
 	{
 		private var _warfishConfig:WarfishConfig;
 		private var _configWindow:ConfigWindow;
+		private var _updateBtnLbl:String = "Check for Update";
 		
 		public function ConfigManager(target:IEventDispatcher=null){
 			super(target);
 			
 			_warfishConfig = new WarfishConfig();
-			dispatchEvent(new Event("ValueChanged"));
+			dispatchEvent(new Event("ValueChanged",false));
 			
 			NativeApplication.nativeApplication.autoExit = true;
 			
@@ -32,6 +33,16 @@ package managers
 		[Bindable (Event="ValueChanged")]
 		public function get warfishConfig():WarfishConfig{
 			return _warfishConfig;
+		}
+		
+		public function setUpdateBtnLbl(value:String):void{
+			_updateBtnLbl = value;
+			dispatchEvent(new Event("updateBtnLblValueChanged",false));
+		}
+		
+		[Bindable (Event="updateBtnLblValueChanged")]
+		public function get updateBtnLbl():String{
+			return _updateBtnLbl;
 		}
 	}
 }

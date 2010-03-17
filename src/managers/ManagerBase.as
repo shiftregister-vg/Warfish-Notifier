@@ -17,6 +17,7 @@ package managers
 		
 		override public function dispatchEvent(event:Event):Boolean{
 			dispatcher.dispatchEvent(event);
+			super.dispatchEvent(event);
 			return true;
 		}
 	}

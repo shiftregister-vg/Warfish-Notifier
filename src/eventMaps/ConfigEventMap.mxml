@@ -23,12 +23,16 @@
 			<mate:MethodInvoker generator="{WindowManager}" method="openConfigWindow" />
 		</mate:EventHandlers>
 		
-		<mate:EventHandlers type="{ConfigEvent.DISABLE_CHECK_FOR_UPDATE_BUTTON}" debug="true">
-			<mate:MethodInvoker generator="{ConfigWindow}" method="noUpdateAvailable" />
+		<mate:EventHandlers type="{ConfigEvent.DISABLE_CHECK_FOR_UPDATE_BUTTON}">
+			<mate:MethodInvoker generator="{ConfigManager}" method="setUpdateBtnLbl" arguments="{'No update available'}" />
 		</mate:EventHandlers>
 		
 		<mate:EventHandlers type="{ConfigEvent.CONFIG_WINDOW_CLOSED}">
 			<mate:EventAnnouncer generator="{AlertEvent}" type="{AlertEvent.STOP_INTERVAL}" />
 		</mate:EventHandlers>
+		
+		<mate:Injectors target="{ConfigWindow}">
+			<mate:PropertyInjector targetKey="updateBtnLbl" sourceKey="updateBtnLbl" source="{ConfigManager}" />
+		</mate:Injectors>
 	</fx:Declarations>
 </mate:EventMap>

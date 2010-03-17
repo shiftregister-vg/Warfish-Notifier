@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:Window xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		  xmlns:s="library://ns.adobe.com/flex/spark" maximizable="false" minimizable="false"
-		  xmlns:mx="library://ns.adobe.com/flex/mx" width="450" height="330" resizable="false"
+		  xmlns:mx="library://ns.adobe.com/flex/mx" width="475" height="330" resizable="false"
 		  creationComplete="onCreationComplete()" systemChrome="none" transparent="true"
 		  showStatusBar="false" title="Warfish Notifier Configuration" backgroundColor="#000000" backgroundAlpha="0" xmlns:eventMaps="eventMaps.*" xmlns:mate="http://mate.asfusion.com/">
 	
@@ -23,6 +23,22 @@
 			[Bindable] public var warfishConfig:WarfishConfig;
 			public var updateManager:UpdateManager;
 			
+			private var _updateBtnLbl:String;
+			
+			public function set updateBtnLbl(value:String):void{
+				_updateBtnLbl = value;
+				dispatchEvent(new Event("ValueChanged"));
+			}
+			
+			[Bindable (Event="ValueChanged")]
+			public function get updateBtnLbl():String{
+				if (_updateBtnLbl == 'No update available'){
+					btn_checkForUpdate.enabled = false;
+				}
+				cursorManager.removeBusyCursor();
+				return _updateBtnLbl; 
+			}
+			
 			private function onCreationComplete():void{
 				InjectorRegistry.register(this);
 				
@@ -39,12 +55,6 @@
 			private function checkForUpdate():void{
 				cursorManager.setBusyCursor();
 				dispatcher.dispatchEvent(new UpdateManagerEvent(UpdateManagerEvent.CHECK_FOR_UPDATE_MANUAL));
-			}
-			
-			public function noUpdateAvailable():void{
-				btn_checkForUpdate.enabled = false;
-				btn_checkForUpdate.label = "No update available";
-				cursorManager.removeBusyCursor();
 			}
 			
 			protected function btn_saveSettings_clickHandler(event:Event):void{
@@ -68,12 +78,12 @@
 		]]>
 	</fx:Script>
 	
-	<s:Panel id="panel" left="15" title="Configuration" width="425" height="300" alpha="0.9" top="10">
+	<s:Panel id="panel" left="15" title="Configuration" width="450" height="300" alpha="0.9" top="10">
 		<s:layout>
 			<s:VerticalLayout horizontalAlign="left" paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="10" />
 		</s:layout>
 		
-		<mx:Form width="100%" height="100%">
+		<mx:Form width="100%" height="100%" verticalScrollPolicy="off" horizontalScrollPolicy="off">
 			<mx:FormItem label="RSS URL" width="100%" color="#000000">
 				<s:TextInput id="ti_rssURL" width="100%" text="{warfishConfig.rssURL}" enter="btn_saveSettings_clickHandler(event)" color="#000000"/>
 			</mx:FormItem>
@@ -90,7 +100,7 @@
 				<s:CheckBox id="blinkIconCbox" label="Blink Tray / Dock Icon" />
 			</mx:FormItem>
 			<mx:FormItem width="100%">
-				<s:Button id="btn_checkForUpdate" label="Check for Update" click="checkForUpdate()" />
+				<s:Button id="btn_checkForUpdate" label="{updateBtnLbl}" click="checkForUpdate()" />
 			</mx:FormItem>
 		</mx:Form>
 		<s:HGroup width="100%">
