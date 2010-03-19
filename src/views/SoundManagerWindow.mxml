@@ -63,7 +63,7 @@
 		</s:HGroup>
 		<s:HGroup horizontalAlign="right" width="100%">
 			<s:Button label="Save" />
-			<s:Button label="Cancel" />
+			<s:Button label="Cancel" click="this.close()" />
 		</s:HGroup>
 	</s:TitleWindow>
 	

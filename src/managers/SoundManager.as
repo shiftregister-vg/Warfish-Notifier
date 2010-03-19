@@ -1,5 +1,6 @@
 package managers
 {
+	import flash.events.Event;
 	import flash.events.IEventDispatcher;
 	import flash.media.Sound;
 	import flash.media.SoundChannel;
@@ -25,6 +26,16 @@ package managers
 				SoundMixer.soundTransform = new SoundTransform(1);
 				soundChannel = soundEmbed.play();
 			}
+		}
+		
+		public function saveSounds(value:Array):void{
+			warfishConfig.sounds = value;
+			dispatchEvent(new Event("soundsChanged"));
+		}
+		
+		[Bindable (event="soundsChanged")]
+		public function get sounds():Array{
+			return warfishConfig.sounds;
 		}
 	}
 }
