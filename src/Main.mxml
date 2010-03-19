@@ -3,13 +3,18 @@
 					   xmlns:s="library://ns.adobe.com/flex/spark" 
 					   xmlns:mx="library://ns.adobe.com/flex/mx"
 					   xmlns:eventMaps="eventMaps.*"
-					   creationComplete="dispatchEvent(new AppEvent(AppEvent.CREATION_COMPLETE))">
+					   creationComplete="init()">
 	<fx:Script>
 		<![CDATA[
 			import events.AppEvent;
+			
 			import vo.WarfishConfig;
 			
 			[Bindable] public var warfishConfig:WarfishConfig;
+			
+			private function init():void{
+				dispatchEvent(new AppEvent(AppEvent.CREATION_COMPLETE));
+			}
 		]]>
 	</fx:Script>
 	<fx:Declarations>

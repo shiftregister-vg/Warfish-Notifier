@@ -133,6 +133,21 @@ package vo
 			return _blinkIconOnTurn;
 		}
 		
+		public function set sounds(value:Array):void{
+			saveProperty("soundArray",value.toString());
+			dispatchEvent(new Event("valueChanged"));
+		}
+		
+		[Bindable (Event="valueChanged")]
+		public function get sounds():Array{
+			var _soundsArray:Array = ["test_file.mp3","test_file2.mp3"];
+			
+			try {
+				_soundsArray = getProperty("soundArray") as Array;
+			} catch (error:Error){}
+			return _soundsArray;
+		}
+		
 		private function saveProperty(name:String,value:String):void{
 			var bytes:ByteArray = new ByteArray();
 				bytes.writeUTFBytes(value.toString());

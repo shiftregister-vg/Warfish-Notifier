@@ -19,6 +19,7 @@
 			
 			import views.AlertBubble;
 			import views.ConfigWindow;
+			import views.SoundManagerWindow;
 		]]>
 	</fx:Script>
 	<fx:Declarations>
@@ -43,7 +44,7 @@
 		
 		
 		<!-- property injectors -->
-		<mate:Injectors targets="{[Main,AlertBubble,ConfigWindow,AlertManager,IconMenuManager,RequestManager,SoundManager]}">
+		<mate:Injectors targets="{[Main,AlertBubble,ConfigWindow,AlertManager,IconMenuManager,RequestManager,SoundManager,SoundManagerWindow]}">
 			<mate:PropertyInjector source="{ConfigManager}" sourceKey="warfishConfig" targetKey="warfishConfig" />
 		</mate:Injectors>
 		

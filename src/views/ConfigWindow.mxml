@@ -18,11 +18,14 @@
 			
 			import managers.UpdateManager;
 			
+			import mx.collections.ArrayList;
+			import mx.collections.IList;
 			import mx.controls.Alert;
 			
 			import vo.WarfishConfig;
 			
 			[Bindable] public var warfishConfig:WarfishConfig;
+			[Bindable] private var sounds:ArrayList;
 			public var updateManager:UpdateManager;
 			
 			private var _updateBtnLbl:String;
@@ -36,6 +39,8 @@
 			public function get updateBtnLbl():String{
 				if (_updateBtnLbl == 'No update available'){
 					btn_checkForUpdate.enabled = false;
+				} else {
+					btn_checkForUpdate.enabled = true;
 				}
 				cursorManager.removeBusyCursor();
 				return _updateBtnLbl; 
@@ -52,6 +57,9 @@
 				blinkIconCbox.selected = warfishConfig.blinkIconOnTurn;
 				
 				panel.moveArea.addEventListener(MouseEvent.MOUSE_DOWN,startMove);
+				
+				updateBtnLbl = "Check for Update";
+				sounds = new ArrayList(warfishConfig.sounds)
 			}
 			
 			private function checkForUpdate():void{
@@ -102,7 +110,7 @@
 				<s:CheckBox id="blinkIconCbox" label="Blink Tray / Dock Icon" />
 			</mx:FormItem>
 			<mx:FormItem label="Alert Sound" width="100%" color="#000000" direction="horizontal">
-				<s:ComboBox id="cmb_soundSelect"/>
+				<s:ComboBox id="cmb_soundSelect" dataProvider="{sounds}"/>
 				<s:Button label="Manage Sounds" click="dispatcher.dispatchEvent(new SoundManagerEvent(SoundManagerEvent.OPEN_SOUND_MANAGER_WINDOW));" />
 			</mx:FormItem>
 			<mx:FormItem width="100%">

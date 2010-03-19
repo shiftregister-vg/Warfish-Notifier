@@ -34,5 +34,9 @@
 			<mate:MethodInvoker generator="{IconMenuManager}" method="stopIconBlink" />
 		</mate:EventHandlers>
 		
+		<mate:EventHandlers type="{IconMenuEvent.ADD_MENU_ITEM}">
+			<mate:MethodInvoker generator="{IconMenuManager}" method="addMenuItemAt" arguments="{[event.iconMenu,event.iconPosition]}" />
+		</mate:EventHandlers>
+		
 	</fx:Declarations>
 </mate:EventMap>
