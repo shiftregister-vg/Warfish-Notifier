@@ -101,35 +101,35 @@
 	
 	<!-- Whether the application can be launched when the user clicks a link in a web browser.
 	Optional. Default false. -->
-	<!-- <allowBrowserInvocation></allowBrowserInvocation> -->
+	<allowBrowserInvocation>true</allowBrowserInvocation>
 
 	<!-- Listing of file types for which the application can register. Optional. -->
-	<!-- <fileTypes> -->
+	<fileTypes>
 
 		<!-- Defines one file type. Optional. -->
-		<!-- <fileType> -->
+		<fileType>
 
 			<!-- The name that the system displays for the registered file type. Required. -->
-			<!-- <name></name> -->
+			<name>WarfishNotifier.binary</name>
 
 			<!-- The extension to register. Required. -->
-			<!-- <extension></extension> -->
+			<extension>wtn</extension>
 			
 			<!-- The description of the file type. Optional. -->
-			<!-- <description></description> -->
+			<description>Warfish Turn Notifier Config File</description>
 			
 			<!-- The MIME content type. -->
-			<!-- <contentType></contentType> -->
+			<contentType>application/octet-stream</contentType>
 			
 			<!-- The icon to display for the file type. Optional. -->
-			<!-- <icon>
-				<image16x16></image16x16>
-				<image32x32></image32x32>
-				<image48x48></image48x48>
-				<image128x128></image128x128>
-			</icon> -->
+			<icon>
+				<image16x16>/assets/icon/warfish-16.png</image16x16>
+				<image32x32>/assets/icon/warfish-32.png</image32x32>
+				<image48x48>/assets/icon/warfish-48.png</image48x48>
+				<image128x128>/assets/icon/warfish-128.png</image128x128>
+			</icon>
 			
-		<!-- </fileType> -->
-	<!-- </fileTypes> -->
+		</fileType>
+	</fileTypes>
 
 </application>

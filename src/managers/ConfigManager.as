@@ -72,7 +72,7 @@ package managers
 		}
 		
 		public function loadConfig():void{
-			var file:File = File.applicationStorageDirectory.resolvePath('warfishConfig.ri');
+			var file:File = File.applicationStorageDirectory.resolvePath('warfishConfig.wtn');
 			if (file.exists){
 				var fileStream:FileStream = new FileStream();
 				fileStream.open(file, FileMode.READ);
@@ -84,7 +84,7 @@ package managers
 		public function saveConfig(value:Config):void{
 			var timer:Timer = new Timer(100,1);
 			timer.addEventListener(TimerEvent.TIMER_COMPLETE,function(event:TimerEvent):void{
-				var file:File = File.applicationStorageDirectory.resolvePath('warfishConfig.ri');
+				var file:File = File.applicationStorageDirectory.resolvePath('warfishConfig.wtn');
 				var fileStream:FileStream = new FileStream();
 				var byteArray:ByteArray = new ByteArray();
 				byteArray.writeObject(value);

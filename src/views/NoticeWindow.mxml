@@ -8,7 +8,7 @@
 		<![CDATA[
 			import com.asfusion.mate.ioc.InjectorRegistry;
 			
-			[Bindable]public var message:String;
+			[Bindable] public var message:String;
 			
 			private function init():void{
 				InjectorRegistry.register(this);
