@@ -22,9 +22,9 @@
 			import mx.collections.IList;
 			import mx.controls.Alert;
 			
-			import vo.WarfishConfig;
+			import vo.Config;
 			
-			[Bindable] public var warfishConfig:WarfishConfig;
+			[Bindable] public var config:Config;
 			[Bindable] private var sounds:ArrayList;
 			public var updateManager:UpdateManager;
 			
@@ -51,15 +51,15 @@
 				
 				nativeWindow.x = (Capabilities.screenResolutionX - nativeWindow.width) / 2;
 				nativeWindow.y = (Capabilities.screenResolutionY - nativeWindow.height) / 2;
-				startOnLoginCbox.selected = warfishConfig.startOnLogin;
-				delaySlider.value = warfishConfig.bubbleInterval / 60000;
-				alertColorPicker.selectedColor = warfishConfig.alertColor;
-				blinkIconCbox.selected = warfishConfig.blinkIconOnTurn;
+				startOnLoginCbox.selected = config.startOnLogin;
+				delaySlider.value = config.bubbleInterval / 60000;
+				alertColorPicker.selectedColor = config.alertColor;
+				blinkIconCbox.selected = config.blinkIconOnTurn;
 				
 				panel.moveArea.addEventListener(MouseEvent.MOUSE_DOWN,startMove);
 				
 				updateBtnLbl = "Check for Update";
-				sounds = new ArrayList(warfishConfig.sounds)
+				sounds = new ArrayList(config.sounds)
 			}
 			
 			private function checkForUpdate():void{
@@ -68,14 +68,18 @@
 			}
 			
 			protected function btn_saveSettings_clickHandler(event:Event):void{
-				warfishConfig.rssURL = ti_rssURL.text;
-				warfishConfig.startOnLogin = startOnLoginCbox.selected;
+				config.rssURL = ti_rssURL.text;
 				try {
-					NativeApplication.nativeApplication.startAtLogin = startOnLoginCbox.selected;
-				} catch (e:Error) {}
-				warfishConfig.bubbleInterval = delaySlider.value * 60000;
-				warfishConfig.alertColor = alertColorPicker.selectedColor;
-				warfishConfig.blinkIconOnTurn = blinkIconCbox.selected;
+					config.startOnLogin = NativeApplication.nativeApplication.startAtLogin = startOnLoginCbox.selected;
+				} catch (e:Error) {
+					config.startOnLogin = startOnLoginCbox.selected = false;
+				}
+				config.bubbleInterval = delaySlider.value * 60000;
+				config.alertColor = alertColorPicker.selectedColor;
+				config.blinkIconOnTurn = blinkIconCbox.selected;
+				var e:ConfigEvent = new ConfigEvent(ConfigEvent.SAVE_CONFIG);
+				e.config = config;
+				dispatcher.dispatchEvent(e);
 				dispatcher.dispatchEvent(new ConfigEvent(ConfigEvent.CONFIG_WINDOW_CLOSED));
 				this.close();
 			}
@@ -95,7 +99,7 @@
 		
 		<mx:Form width="100%" height="100%" verticalScrollPolicy="off" horizontalScrollPolicy="off">
 			<mx:FormItem label="RSS URL" width="100%" color="#000000">
-				<s:TextInput id="ti_rssURL" width="100%" text="{warfishConfig.rssURL}" enter="btn_saveSettings_clickHandler(event)" color="#000000"/>
+				<s:TextInput id="ti_rssURL" width="100%" text="{config.rssURL}" enter="btn_saveSettings_clickHandler(event)" color="#000000"/>
 			</mx:FormItem>
 			<mx:FormItem label="Alert Color" width="100%" color="#000000">
 				<mx:ColorPicker id="alertColorPicker" />

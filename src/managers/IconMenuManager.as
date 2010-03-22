@@ -2,7 +2,9 @@ package managers
 {
 	import com.asfusion.mate.events.Dispatcher;
 	
+	import events.ConfigEvent;
 	import events.IconMenuEvent;
+	import events.SoundManagerEvent;
 	
 	import flash.desktop.DockIcon;
 	import flash.desktop.NativeApplication;
@@ -17,7 +19,7 @@ package managers
 	import flash.utils.clearInterval;
 	import flash.utils.setInterval;
 	
-	import vo.WarfishConfig;
+	import vo.Config;
 
 	
 	public class IconMenuManager extends ManagerBase
@@ -26,7 +28,7 @@ package managers
 		private var icon:Loader = new Loader();
 		private var iconBlinkInterval:int;
 		private var iconIsBlue:Boolean = true;
-		public var warfishConfig:WarfishConfig;
+		public var config:Config;
 		
 		public function IconMenuManager(){
 			
@@ -44,9 +46,12 @@ package managers
 			var soundCommand:NativeMenuItem = iconMenu.addItem(new NativeMenuItem("Enable Sound"));
 			soundCommand.addEventListener(Event.SELECT,function(event:Event):void{
 				dispatchEvent(new IconMenuEvent(IconMenuEvent.ENABLE_SOUND_SELECTED));
-				warfishConfig.playSound = event.target.checked = !event.target.checked;
+				config.playSound = event.target.checked = !event.target.checked;
+				var e:ConfigEvent = new ConfigEvent(ConfigEvent.SAVE_CONFIG);
+				e.config = config;
+				dispatchEvent(e);
 			});
-			soundCommand.checked=warfishConfig.playSound;
+			soundCommand.checked=config.playSound;
 			
 			var configCommand:NativeMenuItem = iconMenu.addItem(new NativeMenuItem("Configure"));
 			configCommand.addEventListener(Event.SELECT,function(event:Event):void{

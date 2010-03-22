@@ -31,6 +31,10 @@
 			<mate:EventAnnouncer generator="{AlertEvent}" type="{AlertEvent.STOP_INTERVAL}" />
 		</mate:EventHandlers>
 		
+		<mate:EventHandlers type="{ConfigEvent.SAVE_CONFIG}">
+			<mate:MethodInvoker generator="{ConfigManager}" method="saveConfig" arguments="{event.config}" />
+		</mate:EventHandlers>
+		
 		<mate:Injectors target="{ConfigWindow}">
 			<mate:PropertyInjector targetKey="updateBtnLbl" sourceKey="updateBtnLbl" source="{ConfigManager}" />
 		</mate:Injectors>

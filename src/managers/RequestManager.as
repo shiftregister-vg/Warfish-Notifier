@@ -7,6 +7,7 @@ package managers
 	import flash.display.NativeMenuItem;
 	import flash.events.Event;
 	import flash.events.IEventDispatcher;
+	import flash.events.IOErrorEvent;
 	import flash.net.URLLoader;
 	import flash.net.URLRequest;
 	import flash.net.URLRequestMethod;
@@ -16,11 +17,11 @@ package managers
 	
 	import mx.core.Window;
 	
-	import vo.WarfishConfig;
+	import vo.Config;
 	
 	public class RequestManager extends ManagerBase
 	{
-		public var warfishConfig:WarfishConfig;
+		public var config:Config;
 		private var rssXML:XML;
 		private var requestDelay:int = 30000;
 		private var requestInterval:int;
@@ -30,7 +31,7 @@ package managers
 		}
 		
 		public function startRequestInterval():void{
-			if (warfishConfig.rssURL.length){
+			if (config.rssURL.length){
 				requestInterval = setInterval(function():void{
 					getRSSFeed();
 				},requestDelay);
@@ -43,12 +44,13 @@ package managers
 		}
 		
 		public function getRSSFeed():void{
-			if (warfishConfig && warfishConfig.rssURL.length){
-				var urlRequest:URLRequest = new URLRequest(warfishConfig.rssURL);
+			if (config && config.rssURL.length){
+				var urlRequest:URLRequest = new URLRequest(config.rssURL);
 				urlRequest.contentType = "text/xml";
 				urlRequest.method = URLRequestMethod.GET;
 				var loader:URLLoader = new URLLoader();
 				loader.addEventListener(Event.COMPLETE,onRequestComplete);
+				loader.addEventListener(IOErrorEvent.IO_ERROR,onRequestError);
 				loader.load(urlRequest);
 			}
 		}
@@ -92,7 +94,7 @@ package managers
 					dispatchEvent(e);
 				}
 				
-				if (warfishConfig.blinkIconOnTurn){
+				if (config.blinkIconOnTurn){
 					dispatchEvent(new IconMenuEvent(IconMenuEvent.BLINK_ICON));
 				} else {
 					e = new IconMenuEvent(IconMenuEvent.SET_ICON);
@@ -103,6 +105,11 @@ package managers
 				
 				dispatchEvent(new RequestManagerEvent(RequestManagerEvent.HAS_TURNS));
 			}
+		}
+		private function onRequestError(event:IOErrorEvent):void{
+			var e:RequestManagerEvent = new RequestManagerEvent(RequestManagerEvent.REQUEST_ERROR);
+			e.message = "There was a problem communicating with Warfish.net.  Verify your RSS URL and that Warfish.net is available and try again.";
+			dispatchEvent(e);
 		}
 	}
 }

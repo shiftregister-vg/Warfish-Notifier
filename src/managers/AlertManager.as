@@ -7,12 +7,14 @@ package managers
 	import flash.utils.clearInterval;
 	import flash.utils.setInterval;
 	
-	import vo.WarfishConfig;
+	import vo.Config;
+	
+	
 	
 	public class AlertManager extends ManagerBase
 	{
 		[Bindable]
-		public var warfishConfig:WarfishConfig;
+		public var config:Config;
 		private var _alertInterval:int;
 		
 		public function AlertManager(target:IEventDispatcher=null){
@@ -35,7 +37,7 @@ package managers
 		}
 		
 		public function setupAlertInterval():void{
-			_alertInterval = setInterval(onAlertInterval,warfishConfig.bubbleInterval);
+			_alertInterval = setInterval(onAlertInterval,config.bubbleInterval);
 		}
 		
 		private function onAlertInterval():void{

@@ -7,14 +7,12 @@
 			import events.AppEvent;
 			import events.ConfigEvent;
 			import events.IconMenuEvent;
-			import events.ORMEvent;
 			import events.RequestManagerEvent;
 			import events.UpdateManagerEvent;
 			
 			import managers.AlertManager;
 			import managers.ConfigManager;
 			import managers.IconMenuManager;
-			import managers.ORMManager;
 			import managers.RequestManager;
 			import managers.SoundManager;
 			import managers.UpdateManager;
@@ -32,14 +30,12 @@
 		<eventMaps:RequestManagerEventMap />
 		<eventMaps:SoundManagerEventMap />
 		<eventMaps:UpdateManagerEventMap />
-		<eventMaps:ORMEventMap />
 		
 		
 		<mate:Debugger level="{Debugger.ALL}"/>
 		
 		<!-- handlers -->
 		<mate:EventHandlers type="{AppEvent.CREATION_COMPLETE}">
-			<mate:EventAnnouncer generator="{ORMEvent}" type="{ORMEvent.INIT}" /> 
 			<mate:EventAnnouncer generator="{IconMenuEvent}" type="{IconMenuEvent.BUILD_ICON_MENU}" />
 			<mate:EventAnnouncer generator="{UpdateManagerEvent}" type="{UpdateManagerEvent.AUTO_CHECK_FOR_UPDATE}" />
 			<mate:EventAnnouncer generator="{RequestManagerEvent}" type="{RequestManagerEvent.START_REQUEST_INTERVAL}" />
@@ -48,8 +44,8 @@
 		
 		
 		<!-- property injectors -->
-		<mate:Injectors targets="{[Main,AlertBubble,ConfigWindow,AlertManager,IconMenuManager,RequestManager,SoundManager,SoundManagerWindow]}">
-			<mate:PropertyInjector source="{ConfigManager}" sourceKey="warfishConfig" targetKey="warfishConfig" />
+		<mate:Injectors targets="{[AlertBubble,ConfigWindow,AlertManager,IconMenuManager,RequestManager,SoundManager,SoundManagerWindow]}">
+			<mate:PropertyInjector source="{ConfigManager}" sourceKey="config" targetKey="config" />
 		</mate:Injectors>
 		
 	</fx:Declarations>

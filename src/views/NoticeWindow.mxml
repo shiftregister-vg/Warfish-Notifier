@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Window xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" showStatusBar="false" maximizable="false" minimizable="false"
+			   systemChrome="none" transparent="true" backgroundColor="#000000" backgroundAlpha="0" creationComplete="init()"
+			   xmlns:mx="library://ns.adobe.com/flex/mx" width="433" height="182" title="Notice! - Warfish Turn Notifier" close="this.close()">
+	
+	<fx:Script>
+		<![CDATA[
+			import com.asfusion.mate.ioc.InjectorRegistry;
+			
+			[Bindable]public var message:String;
+			
+			private function init():void{
+				InjectorRegistry.register(this);
+				
+				nativeWindow.x = (Capabilities.screenResolutionX - nativeWindow.width) / 2;
+				nativeWindow.y = (Capabilities.screenResolutionY - nativeWindow.height) / 2;
+				
+				tw.moveArea.addEventListener(MouseEvent.MOUSE_DOWN,startMove);
+			}
+			
+			private function startMove(event:MouseEvent):void{
+				stage.nativeWindow.startMove();
+			}
+		]]>
+	</fx:Script>
+	
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	
+	<s:TitleWindow id="tw" close="this.close()" title="Notice!" width="400" height="150" top="10" left="15" alpha="0.9">
+		<s:layout>
+			<s:VerticalLayout paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="10"/>
+		</s:layout>
+		<s:Label text="{message}" width="100%" height="100%"  fontSize="14" fontWeight="bold"/>
+		<s:HGroup horizontalAlign="right" width="100%">
+			<s:Button label="Ok" click="this.close()" />
+		</s:HGroup>
+	</s:TitleWindow>
+	
+</s:Window>

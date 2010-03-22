@@ -14,10 +14,10 @@
 		<![CDATA[
 			import com.asfusion.mate.ioc.InjectorRegistry;
 			
-			import vo.WarfishConfig;
+			import vo.Config;
 			
 			[Bindable]
-			public var warfishConfig:WarfishConfig;
+			public var config:Config;
 			
 			private function onCreationComplete():void{
 				InjectorRegistry.register(this);
@@ -44,14 +44,14 @@
 		]]>
 	</fx:Script>
 	
-	<s:TitleWindow id="tw" left="15" title="Sound Manager" width="400" height="300" top="10" alpha="0.9" close="this.close()">
+	<s:TitleWindow id="tw" left="15" title="Sound Manager" width="400" height="250" top="10" alpha="0.9" close="this.close()">
 		<s:layout>
 			<s:VerticalLayout horizontalAlign="left" paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="10" />
 		</s:layout>
 		<mx:FileSystemList id="fsl" width="100%" height="0" visible="false" extensions="{['mp3']}" fileChoose="onFileChoose()"/>
 		
 		<s:HGroup width="100%" height="100%">
-			<mx:DataGrid width="100%" height="100%" dataProvider="{warfishConfig.sounds}">
+			<mx:DataGrid width="100%" height="100%" dataProvider="{config.sounds}">
 				<mx:columns>
 					<mx:DataGridColumn headerText="File"/>
 				</mx:columns>

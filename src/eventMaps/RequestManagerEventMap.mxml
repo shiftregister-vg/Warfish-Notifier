@@ -10,6 +10,7 @@
 			
 			import managers.AlertManager;
 			import managers.RequestManager;
+			import managers.WindowManager;
 		]]>
 	</fx:Script>
 	<fx:Declarations>
@@ -30,6 +31,10 @@
 		
 		<mate:EventHandlers type="{RequestManagerEvent.GET_TURNS_FEED}">
 			<mate:MethodInvoker generator="{RequestManager}" method="getRSSFeed" />
+		</mate:EventHandlers>
+		
+		<mate:EventHandlers type="{RequestManagerEvent.REQUEST_ERROR}">
+			<mate:MethodInvoker generator="{WindowManager}" method="openNoticeWindow" arguments="{event.message}" />
 		</mate:EventHandlers>
 		
 	</fx:Declarations>

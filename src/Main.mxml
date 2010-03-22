@@ -8,10 +8,6 @@
 		<![CDATA[
 			import events.AppEvent;
 			
-			import vo.WarfishConfig;
-			
-			[Bindable] public var warfishConfig:WarfishConfig;
-			
 			private function init():void{
 				dispatchEvent(new AppEvent(AppEvent.CREATION_COMPLETE));
 			}

@@ -18,10 +18,12 @@
 			import flash.net.navigateToURL;
 			import flash.utils.setTimeout;
 			
-			import vo.WarfishConfig;
+			import vo.Config;
+			
+			
 			
 			[Bindable]
-			public var warfishConfig:WarfishConfig;
+			public var config:Config;
 			
 			private function init():void{
 				InjectorRegistry.register(this);
@@ -29,7 +31,7 @@
 				nativeWindow.x = ( Screen.mainScreen.bounds.width - 340 );
 				nativeWindow.y = ( Screen.mainScreen.bounds.height - 70 );
 				this.addEventListener(MouseEvent.CLICK,onBubbleClick);
-				this.setStyle("backgroundColor",warfishConfig.alertColor);
+				this.setStyle("backgroundColor",config.alertColor);
 				dispatcher.dispatchEvent(new AlertEvent(AlertEvent.PLAY_SOUND));
 			}
 			

@@ -4,6 +4,7 @@ package managers
 	
 	import views.AlertBubble;
 	import views.ConfigWindow;
+	import views.NoticeWindow;
 	import views.SoundManagerWindow;
 	
 	public class WindowManager extends ManagerBase
@@ -11,6 +12,7 @@ package managers
 		private var alertBubble:AlertBubble;
 		private var configWindow:ConfigWindow;
 		private var soundManagerWindow:SoundManagerWindow;
+		private var noticeWindow:NoticeWindow;
 		
 		public function WindowManager(target:IEventDispatcher=null)
 		{
@@ -42,6 +44,15 @@ package managers
 				soundManagerWindow.open();
 			}
 			soundManagerWindow.activate();
+		}
+		
+		public function openNoticeWindow(message:String):void{
+			if (!noticeWindow || noticeWindow.closed){
+				noticeWindow = new NoticeWindow();
+				noticeWindow.open();
+			}
+			noticeWindow.message = message;
+			noticeWindow.activate();
 		}
 	}
 }
