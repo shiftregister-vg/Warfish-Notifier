@@ -2,22 +2,39 @@
 <s:Window xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		  xmlns:s="library://ns.adobe.com/flex/spark" 
 		  xmlns:mx="library://ns.adobe.com/flex/mx"
-		  width="425" height="300" showStatusBar="false" maximizable="false" minimizable="false"
+		  width="425" height="285" showStatusBar="false" maximizable="false" minimizable="false"
 		  systemChrome="none" transparent="true" backgroundColor="#000000" backgroundAlpha="0"
 		  creationComplete="onCreationComplete()" xmlns:mate="http://mate.asfusion.com/"
-		  title="Sound Manager - Warfish Turn Notifier">
-	<s:layout>
-		<s:VerticalLayout/>
-	</s:layout>
-	
+		  title="Sound Manager - Warfish Turn Notifier">	
 	<fx:Script>
 		<![CDATA[
 			import com.asfusion.mate.ioc.InjectorRegistry;
 			
+			import events.ConfigEvent;
+			import events.SoundManagerEvent;
+			
+			import vo.AlertSound;
 			import vo.Config;
 			
-			[Bindable]
-			public var config:Config;
+			[Bindable] private var sounds:Array;
+			private var _config:Config;
+			
+			public function set config(value:Config):void{
+				_config = value;
+				dispatchEvent(new Event("configChanged"));
+				soundsDG.data = sounds = config.sounds;
+				for (var i:int = 0; i < sounds.length; i++){
+					if (sounds[i].isSelected){
+						soundsDG.selectedIndex = i;
+						break;
+					}
+				}
+			}
+			
+			[Bindable (event="configChanged")]
+			public function get config():Config{
+				return _config;
+			}
 			
 			private function onCreationComplete():void{
 				InjectorRegistry.register(this);
@@ -26,6 +43,8 @@
 				nativeWindow.y = (Capabilities.screenResolutionY - nativeWindow.height) / 2;
 				
 				tw.moveArea.addEventListener(MouseEvent.MOUSE_DOWN,startMove);
+				
+				useDefaultSoundCBox.selected = config.playDefaultSound;
 			}
 			
 			private function startMove(event:MouseEvent):void{
@@ -33,42 +52,95 @@
 			}
 			
 			private function addSound():void{
-				fsl.percentHeight = 100;
-				fsl.visible = true;
+				var file:File = new File();
+				var fileFilter:FileFilter = new FileFilter("mp3","*.mp3");
+				file.browseForOpen("Select MP3",[fileFilter]);
+				file.addEventListener(Event.SELECT,onFileSelect);
 			}
 			
-			private function onFileChoose():void{
-				fsl.height = 0;
-				fsl.visible = false;
+			private function onFileSelect(event:Event):void{
+				var original:File = event.target as File;
+				var copy:File = File.applicationStorageDirectory.resolvePath(original.name);
+				original.addEventListener(Event.COMPLETE,onCopyComplete);
+				original.copyToAsync(copy,true);
+			}
+			
+			private function onCopyComplete(event:Event):void{
+				var file:File = event.target as File;
+				var alertSound:AlertSound = new AlertSound();
+				alertSound.file_name = File.applicationStorageDirectory.resolvePath(file.name).nativePath;
+				alertSound.pretty_name = file.name.replace('.mp3','');
+				alertSound.isSelected = false;
+				var e:SoundManagerEvent = new SoundManagerEvent(SoundManagerEvent.ADD_ALERT_SOUND);
+				e.alertSound = alertSound;
+				dispatcher.dispatchEvent(e);
+			}
+			
+			private function deleteSound():void{
+				var alertSoundIndex:int = soundsDG.selectedIndex;
+				if (alertSoundIndex >= 0){
+					var tempArray:Array = new Array();
+					for (var i:int = 0;i < sounds.length; i++){
+						if (i != alertSoundIndex){
+							tempArray.push(sounds[i]);
+						} else {
+							deleteSoundFile(sounds[i].file_name);
+						}
+					}
+					sounds = tempArray;
+					var e:SoundManagerEvent = new SoundManagerEvent(SoundManagerEvent.SAVE_SOUNDS);
+					e.sounds = sounds;
+					dispatcher.dispatchEvent(e);
+				}
+			}
+			
+			private function deleteSoundFile(filePath:String):void{
+				var file:File = new File(filePath);
+				file.deleteFile();
+			}
+			
+			private function onCBoxClick():void{
+				config.playDefaultSound = useDefaultSoundCBox.selected;
+			}
+			
+			private function closeWindow():void{
+				var e:ConfigEvent = new ConfigEvent(ConfigEvent.SAVE_CONFIG);
+				e.config = config;
+				dispatcher.dispatchEvent(e);
+				this.close();
+			}
+			
+			private function onItemClick():void{
+				for (var i:int = 0;i < sounds.length; i++){
+					sounds[i].isSelected = false;
+				}
+				sounds[soundsDG.selectedIndex].isSelected = true;
+				var e:SoundManagerEvent = new SoundManagerEvent(SoundManagerEvent.SAVE_SOUNDS);
+				e.sounds = sounds;
+				dispatcher.dispatchEvent(e);
 			}
 		]]>
 	</fx:Script>
 	
-	<s:TitleWindow id="tw" left="15" title="Sound Manager" width="400" height="250" top="10" alpha="0.9" close="this.close()">
+	<s:TitleWindow id="tw" left="15" title="Sound Manager" width="400" height="250" top="10" alpha="0.9" close="closeWindow()">
 		<s:layout>
 			<s:VerticalLayout horizontalAlign="left" paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="10" />
 		</s:layout>
-		<mx:FileSystemList id="fsl" width="100%" height="0" visible="false" extensions="{['mp3']}" fileChoose="onFileChoose()"/>
-		
-		<s:HGroup width="100%" height="100%">
-			<mx:DataGrid width="100%" height="100%" dataProvider="{config.sounds}">
-				<mx:columns>
-					<mx:DataGridColumn headerText="File"/>
-				</mx:columns>
-			</mx:DataGrid>
-			<s:VGroup height="100%">
-				<s:Button label="Add" click="addSound()" />
-				<s:Button label="Delete" />
-			</s:VGroup>
-		</s:HGroup>
+		<s:CheckBox label="Use Default Sound" id="useDefaultSoundCBox" click="onCBoxClick()" />
+		<mx:DataGrid id="soundsDG" width="100%" height="100%" dataProvider="{sounds}" enabled="{!useDefaultSoundCBox.selected}"
+					 itemClick="onItemClick()">
+			<mx:columns>
+				<mx:DataGridColumn headerText="File" dataField="pretty_name"/>
+			</mx:columns>
+		</mx:DataGrid>
 		<s:HGroup horizontalAlign="right" width="100%">
-			<s:Button label="Save" />
-			<s:Button label="Cancel" click="this.close()" />
+			<s:Button label="Add" click="addSound()" />
+			<s:Button label="Delete" click="deleteSound()" />
+			<s:Button label="Done" click="closeWindow()" />
 		</s:HGroup>
 	</s:TitleWindow>
 	
 	<fx:Declarations>
-		
 		<mate:Dispatcher id="dispatcher"/>
 	</fx:Declarations>
 </s:Window>

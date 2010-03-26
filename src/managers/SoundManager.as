@@ -1,5 +1,7 @@
 package managers
 {
+	import events.ConfigEvent;
+	
 	import flash.events.ErrorEvent;
 	import flash.events.Event;
 	import flash.events.IEventDispatcher;
@@ -20,14 +22,14 @@ package managers
 	public class SoundManager extends ManagerBase
 	{
 		public var config:Config;
-		private var sound:Sound = new Sound();
-		private var soundChannel:SoundChannel;
 		
 		public function SoundManager(){
 			
 		}
 		
 		public function playSound():void{
+			var sound:Sound = new Sound();
+			var soundChannel:SoundChannel;
 			if (config.playSound){
 				var soundFile:String = config.defaultSound.file_name;
 				if (!config.playDefaultSound){
@@ -47,11 +49,19 @@ package managers
 		public function saveSounds(value:Array):void{
 			config.sounds = value;
 			dispatchEvent(new Event("soundsChanged"));
+			var e:ConfigEvent = new ConfigEvent(ConfigEvent.SAVE_CONFIG);
+			e.config = config;
+			dispatchEvent(e);
 		}
 		
 		[Bindable (event="soundsChanged")]
 		public function get sounds():Array{
 			return config.sounds;
+		}
+		
+		public function addAlertSound(alertSound:AlertSound):void{
+			config.sounds.push(alertSound);
+			saveSounds(config.sounds);
 		}
 	}
 }

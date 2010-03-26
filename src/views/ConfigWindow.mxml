@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:Window xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		  xmlns:s="library://ns.adobe.com/flex/spark" maximizable="false" minimizable="false"
-		  xmlns:mx="library://ns.adobe.com/flex/mx" width="475" height="330" resizable="false"
+		  xmlns:mx="library://ns.adobe.com/flex/mx" width="475" height="305" resizable="false"
 		  creationComplete="onCreationComplete()" systemChrome="none" transparent="true"
 		  showStatusBar="false" title="Configuration - Warfish Notifier" backgroundColor="#000000" backgroundAlpha="0"
 		  xmlns:mate="http://mate.asfusion.com/">
@@ -92,7 +92,7 @@
 		]]>
 	</fx:Script>
 	
-	<s:TitleWindow id="panel" left="15" title="Configuration" width="450" height="300" alpha="0.9" top="10" close="this.close()">
+	<s:TitleWindow id="panel" left="15" title="Configuration" width="450" height="275" alpha="0.9" top="10" close="this.close()">
 		<s:layout>
 			<s:VerticalLayout horizontalAlign="left" paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="10" />
 		</s:layout>
@@ -113,12 +113,9 @@
 			<mx:FormItem width="100%" color="#000000">
 				<s:CheckBox id="blinkIconCbox" label="Blink Tray / Dock Icon" />
 			</mx:FormItem>
-			<mx:FormItem label="Alert Sound" width="100%" color="#000000" direction="horizontal">
-				<s:ComboBox id="cmb_soundSelect" dataProvider="{sounds}"/>
-				<s:Button label="Manage Sounds" click="dispatcher.dispatchEvent(new SoundManagerEvent(SoundManagerEvent.OPEN_SOUND_MANAGER_WINDOW));" />
-			</mx:FormItem>
-			<mx:FormItem width="100%">
+			<mx:FormItem width="100%" direction="horizontal">
 				<s:Button id="btn_checkForUpdate" label="{updateBtnLbl}" click="checkForUpdate()" />
+				<s:Button label="Manage Sounds" click="dispatcher.dispatchEvent(new SoundManagerEvent(SoundManagerEvent.OPEN_SOUND_MANAGER_WINDOW));" />
 			</mx:FormItem>
 		</mx:Form>
 		<s:HGroup width="100%">
