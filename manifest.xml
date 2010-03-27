@@ -3,7 +3,7 @@
 	<version>1.8</version>
 	<url>http://update.slantsoft.com/warfishnotification/WarfishTurnNotification-1.8.air</url>
 	<description><![CDATA[
-* Alert sound can now be customized. Just pick the mp3 file that you want to play in the config window.
+* Alert sound can now be customized. Just pick the mp3 file that you want to play via the sound manager window (found through the config window).
 * Alert window bug fixes.
 * Architecture of the app has been completely redesigned.
 	]]></description>
