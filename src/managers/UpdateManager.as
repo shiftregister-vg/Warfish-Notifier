@@ -23,7 +23,6 @@ package managers
 	{
 		private var manifestURL:String = "http://update.slantsoft.com/warfishnotification/manifest.xml";
 		private var manifest:XML;
-		private var appUpdater:ApplicationUpdaterUI = new ApplicationUpdaterUI();
 		
 		public function UpdateManager(){
 			var updateInterval:int = setInterval(function(event:Event=null):void{
@@ -32,7 +31,9 @@ package managers
 		}
 		
 		public function checkForUpdate():void{
-			appUpdater.updateURL = manifestURL + "?rnd=" + Math.random();
+			trace('checkForUpdate()');
+			var appUpdater:ApplicationUpdaterUI = new ApplicationUpdaterUI();
+			appUpdater.updateURL = manifestURL + "?" + Math.random().toString() + "=" + Math.random().toString();
 			appUpdater.isCheckForUpdateVisible = false;
 			appUpdater.addEventListener(UpdateEvent.INITIALIZED,onUpdate);
 			appUpdater.addEventListener(ErrorEvent.ERROR,onError);
@@ -40,11 +41,13 @@ package managers
 		}
 		
 		private function onUpdate(event:UpdateEvent):void{
+			var appUpdater:ApplicationUpdaterUI = event.target as ApplicationUpdaterUI;
 			appUpdater.checkNow();
 		}
 		
 		public function manualCheckForUpdate():void{
-			var urlRequest:URLRequest = new URLRequest(manifestURL + "?" + Math.random() + "=" + Math.random());
+			trace('manualCheckForUpdate()');
+			var urlRequest:URLRequest = new URLRequest(manifestURL + "?" + Math.random().toString() + "=" + Math.random().toString());
 			urlRequest.contentType = "text/xml";
 			urlRequest.method = URLRequestMethod.GET;
 			var loader:URLLoader = new URLLoader();
