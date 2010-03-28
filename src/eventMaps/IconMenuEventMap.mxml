@@ -38,5 +38,9 @@
 			<mate:MethodInvoker generator="{IconMenuManager}" method="addMenuItemAt" arguments="{[event.iconMenu,event.iconPosition]}" />
 		</mate:EventHandlers>
 		
+		<mate:EventHandlers type="{IconMenuEvent.REMOVE_MENU_BY_LABEL}">
+			<mate:MethodInvoker generator="{IconMenuManager}" method="removeMenuByLabel" arguments="{event.menuLabel}" />
+		</mate:EventHandlers>
+		
 	</fx:Declarations>
 </mate:EventMap>

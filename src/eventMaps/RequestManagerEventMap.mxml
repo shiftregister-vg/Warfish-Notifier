@@ -27,6 +27,9 @@
 		<mate:EventHandlers type="{RequestManagerEvent.NO_TURNS}">
 			<mate:EventAnnouncer generator="{AlertEvent}" type="{AlertEvent.STOP_INTERVAL}" />
 			<mate:EventAnnouncer generator="{IconMenuEvent}" type="{IconMenuEvent.STOP_ICON_BLINK}" />
+			<mate:EventAnnouncer generator="{IconMenuEvent}" type="{IconMenuEvent.REMOVE_MENU_BY_LABEL">
+				<mate:Properties menuLabel="Games" />
+			</mate:EventAnnouncer>
 		</mate:EventHandlers>
 		
 		<mate:EventHandlers type="{RequestManagerEvent.GET_TURNS_FEED}">

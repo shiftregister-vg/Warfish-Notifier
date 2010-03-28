@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <update xmlns="http://ns.adobe.com/air/framework/update/description/1.0">
-	<version>1.8</version>
+	<version>1.8.1</version>
 	<url>http://update.slantsoft.com/warfishnotification/WarfishTurnNotification-1.8.air</url>
 	<description><![CDATA[
 * Alert sound can now be customized. Just pick the mp3 file that you want to play via the sound manager window (found through the config window).
