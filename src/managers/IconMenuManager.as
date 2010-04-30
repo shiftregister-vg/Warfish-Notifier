@@ -145,5 +145,9 @@ package managers
 			}
 			setIcon();
 		}
+		
+		public function setOfflineIcon():void{
+			setIcon("-gray"," - Communication error!");
+		}
 	}
 }

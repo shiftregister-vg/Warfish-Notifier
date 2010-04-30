@@ -9,6 +9,7 @@
 			import events.RequestManagerEvent;
 			
 			import managers.AlertManager;
+			import managers.IconMenuManager;
 			import managers.RequestManager;
 			import managers.WindowManager;
 		]]>
@@ -37,7 +38,7 @@
 		</mate:EventHandlers>
 		
 		<mate:EventHandlers type="{RequestManagerEvent.REQUEST_ERROR}">
-			<mate:MethodInvoker generator="{WindowManager}" method="openNoticeWindow" arguments="{event.message}" />
+			<mate:MethodInvoker generator="{IconMenuManager}" method="setOfflineIcon" />
 		</mate:EventHandlers>
 		
 	</fx:Declarations>
