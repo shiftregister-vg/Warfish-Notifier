@@ -23,7 +23,7 @@ package managers
 			
 			if (!alertBubble || alertBubble.closed){
 				alertBubble = new AlertBubble();
-				alertBubble.open();
+				alertBubble.open(false);
 			}
 			
 			alertBubble.open();
