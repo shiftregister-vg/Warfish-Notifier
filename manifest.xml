@@ -1,14 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <update xmlns="http://ns.adobe.com/air/framework/update/description/1.0">
-	<version>1.8.4</version>
-	<url>http://update.slantsoft.com/warfishnotification/WarfishTurnNotification-1.8.4.air</url>
+	<version>1.8.5</version>
+	<url>http://update.slantsoft.com/warfishnotification/WarfishTurnNotification-1.8.5.air</url>
 	<description><![CDATA[
+**** 1.8.5 ****
+* Fixed a bug with the alert window that would cause it to steal focus from the running application.
+
+**** 1.8.4 ****
+* Minor bug fixes.
+
+**** 1.8 ****
 * Alert sound can now be customized. Just pick the mp3 file that you want to play via the sound manager window (found through the config window).
 * Alert window bug fixes.
 * Architecture of the app has been completely redesigned.
 * Removed failed connection alert and replaced it with a gray "Offline" icon.
-
-**** 1.8.4 ****
-* Minor bug fixes.
 	]]></description>
 </update>
