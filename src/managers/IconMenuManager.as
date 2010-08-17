@@ -2,6 +2,7 @@ package managers
 {
 	import com.asfusion.mate.events.Dispatcher;
 	
+	import events.AnalyticsEvent;
 	import events.ConfigEvent;
 	import events.IconMenuEvent;
 	import events.SoundManagerEvent;
@@ -39,6 +40,8 @@ package managers
 			websiteCommand.addEventListener(Event.SELECT,function(event:Event):void{
 				dispatchEvent(new IconMenuEvent(IconMenuEvent.OPEN_WARFISH_SELECTED));
 				navigateToURL(new URLRequest("http://warfish.net/war/play/"));
+				
+				trackMenuClick('[Menu] Open Warfish');
 			});
 			
 			var seperator:NativeMenuItem = iconMenu.addItem(new NativeMenuItem("",true));
@@ -50,16 +53,22 @@ package managers
 				var e:ConfigEvent = new ConfigEvent(ConfigEvent.SAVE_CONFIG);
 				e.config = config;
 				dispatchEvent(e);
+				
+				trackMenuClick('[Menu] Enable Sound: ' + event.target.checked.toString());
 			});
 			soundCommand.checked=config.playSound;
 			
 			var configCommand:NativeMenuItem = iconMenu.addItem(new NativeMenuItem("Configure"));
 			configCommand.addEventListener(Event.SELECT,function(event:Event):void{
 				dispatchEvent(new IconMenuEvent(IconMenuEvent.CONFIG_MENU_SELECTED));
+				
+				trackMenuClick('[Menu] Configure');
 			});
 			
 			var exitCommand:NativeMenuItem = iconMenu.addItem(new NativeMenuItem("Exit"));
 			exitCommand.addEventListener(Event.SELECT,function(event:Event):void{
+				trackMenuClick('[Menu] Exit');
+				
 				dispatchEvent(new IconMenuEvent(IconMenuEvent.EXIT_MENU_SELECTED));
 				NativeApplication.nativeApplication.icon.bitmaps = [];
 				NativeApplication.nativeApplication.exit();
@@ -148,6 +157,12 @@ package managers
 		
 		public function setOfflineIcon():void{
 			setIcon("-gray"," - Communication error!");
+		}
+		
+		private function trackMenuClick(action:String):void{
+			var ae:AnalyticsEvent = new AnalyticsEvent(AnalyticsEvent.TRACK_CLICK);
+			ae.action = action;
+			dispatchEvent(ae);
 		}
 	}
 }

@@ -10,6 +10,7 @@
 		<![CDATA[
 			import com.asfusion.mate.ioc.InjectorRegistry;
 			
+			import events.AnalyticsEvent;
 			import events.ConfigEvent;
 			import events.SoundManagerEvent;
 			
@@ -56,6 +57,10 @@
 				var fileFilter:FileFilter = new FileFilter("mp3","*.mp3");
 				file.browseForOpen("Select MP3",[fileFilter]);
 				file.addEventListener(Event.SELECT,onFileSelect);
+				
+				var e:AnalyticsEvent = new AnalyticsEvent(AnalyticsEvent.TRACK_CLICK);
+				e.action = 'Add Sound';
+				dispatcher.dispatchEvent(e);
 			}
 			
 			private function onFileSelect(event:Event):void{
@@ -63,6 +68,10 @@
 				var copy:File = File.applicationStorageDirectory.resolvePath(original.name);
 				original.addEventListener(Event.COMPLETE,onCopyComplete);
 				original.copyToAsync(copy,true);
+				
+				var e:AnalyticsEvent = new AnalyticsEvent(AnalyticsEvent.TRACK_CLICK);
+				e.action = 'Sound added: ' + original.name;
+				dispatcher.dispatchEvent(e);
 			}
 			
 			private function onCopyComplete(event:Event):void{
@@ -114,6 +123,9 @@
 			
 			private function onCBoxClick():void{
 				config.playDefaultSound = useDefaultSoundCBox.selected;
+				var e:AnalyticsEvent = new AnalyticsEvent(AnalyticsEvent.TRACK_CLICK);
+				e.action = 'Default Sound ' + useDefaultSoundCBox.selected ? 'selected' : 'deselected';
+				dispatcher.dispatchEvent(e);
 			}
 			
 			private function closeWindow():void{

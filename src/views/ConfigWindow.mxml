@@ -10,6 +10,7 @@
 		<![CDATA[
 			import com.asfusion.mate.ioc.InjectorRegistry;
 			
+			import events.AnalyticsEvent;
 			import events.ConfigEvent;
 			import events.SoundManagerEvent;
 			import events.UpdateManagerEvent;
@@ -21,6 +22,7 @@
 			import mx.collections.ArrayList;
 			import mx.collections.IList;
 			import mx.controls.Alert;
+			import mx.events.ColorPickerEvent;
 			
 			import vo.Config;
 			
@@ -65,6 +67,10 @@
 			private function checkForUpdate():void{
 				cursorManager.setBusyCursor();
 				dispatcher.dispatchEvent(new UpdateManagerEvent(UpdateManagerEvent.CHECK_FOR_UPDATE_MANUAL));
+				
+				var ae:AnalyticsEvent = new AnalyticsEvent(AnalyticsEvent.TRACK_CLICK);
+				ae.action = 'Manual Check For Update';
+				dispatcher.dispatchEvent(ae);
 			}
 			
 			protected function btn_saveSettings_clickHandler(event:Event):void{
@@ -82,11 +88,56 @@
 				dispatcher.dispatchEvent(e);
 				dispatcher.dispatchEvent(new ConfigEvent(ConfigEvent.CONFIG_WINDOW_CLOSED));
 				this.close();
+				
+				var ae:AnalyticsEvent = new AnalyticsEvent(AnalyticsEvent.TRACK_CLICK);
+				ae.action = 'Saved Settings';
+				dispatcher.dispatchEvent(ae);
 			}
 
 			protected function startMove(event:MouseEvent):void
 			{
 				stage.nativeWindow.startMove();
+			}
+
+
+			protected function blinkIconCbox_clickHandler(event:MouseEvent):void
+			{
+				var ae:AnalyticsEvent = new AnalyticsEvent(AnalyticsEvent.TRACK_CLICK);
+				ae.action = 'Blink Icon: ' + blinkIconCbox.selected.toString();
+				dispatcher.dispatchEvent(ae);
+			}
+
+
+			protected function alertColorPicker_clickHandler(event:MouseEvent):void
+			{
+				var ae:AnalyticsEvent = new AnalyticsEvent(AnalyticsEvent.TRACK_CLICK);
+				ae.action = 'Color Picker Opened';
+				dispatcher.dispatchEvent(ae);
+			}
+
+
+			protected function alertColorPicker_changeHandler(event:ColorPickerEvent):void
+			{
+				var ae:AnalyticsEvent = new AnalyticsEvent(AnalyticsEvent.TRACK_CLICK);
+				ae.action = 'Alert Color Changed: ' + alertColorPicker.selectedColor.toString();
+				dispatcher.dispatchEvent(ae);
+			}
+
+
+			protected function startOnLoginCbox_clickHandler(event:MouseEvent):void
+			{
+				var ae:AnalyticsEvent = new AnalyticsEvent(AnalyticsEvent.TRACK_CLICK);
+				ae.action = 'Start on login: ' + startOnLoginCbox.selected.toString();
+				dispatcher.dispatchEvent(ae);
+			}
+
+
+			protected function openSoundManagerWindow_clickHandler(event:MouseEvent):void
+			{
+				dispatcher.dispatchEvent(new SoundManagerEvent(SoundManagerEvent.OPEN_SOUND_MANAGER_WINDOW));
+				var ae:AnalyticsEvent = new AnalyticsEvent(AnalyticsEvent.TRACK_CLICK);
+				ae.action = 'Sound Manager Opened';
+				dispatcher.dispatchEvent(ae);
 			}
 
 		]]>
@@ -102,20 +153,20 @@
 				<s:TextInput id="ti_rssURL" width="100%" text="{config.rssURL}" enter="btn_saveSettings_clickHandler(event)" color="#000000"/>
 			</mx:FormItem>
 			<mx:FormItem label="Alert Color" width="100%" color="#000000">
-				<mx:ColorPicker id="alertColorPicker" />
+				<mx:ColorPicker id="alertColorPicker" click="alertColorPicker_clickHandler(event)" change="alertColorPicker_changeHandler(event)" />
 			</mx:FormItem>
 			<mx:FormItem color="#000000" width="100%">
-				<s:CheckBox id="startOnLoginCbox" label="Start on login"/>
+				<s:CheckBox id="startOnLoginCbox" label="Start on login" click="startOnLoginCbox_clickHandler(event)"/>
 			</mx:FormItem>
 			<mx:FormItem label="Alert every {delaySlider.value.toString()} minutes" width="100%" color="#000000">
 				<s:HSlider id="delaySlider" width="100%" minimum="1" maximum="30" />
 			</mx:FormItem>
 			<mx:FormItem width="100%" color="#000000">
-				<s:CheckBox id="blinkIconCbox" label="Blink Tray / Dock Icon" />
+				<s:CheckBox id="blinkIconCbox" label="Blink Tray / Dock Icon" click="blinkIconCbox_clickHandler(event)" />
 			</mx:FormItem>
 			<mx:FormItem width="100%" direction="horizontal">
 				<s:Button id="btn_checkForUpdate" label="{updateBtnLbl}" click="checkForUpdate()" />
-				<s:Button label="Manage Sounds" click="dispatcher.dispatchEvent(new SoundManagerEvent(SoundManagerEvent.OPEN_SOUND_MANAGER_WINDOW));" />
+				<s:Button label="Manage Sounds" click="openSoundManagerWindow_clickHandler(event)" />
 			</mx:FormItem>
 		</mx:Form>
 		<s:HGroup width="100%">

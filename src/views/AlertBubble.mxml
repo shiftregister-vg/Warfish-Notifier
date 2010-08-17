@@ -11,6 +11,7 @@
 			import com.asfusion.mate.ioc.InjectorRegistry;
 			
 			import events.AlertEvent;
+			import events.AnalyticsEvent;
 			
 			import flash.events.Event;
 			import flash.events.MouseEvent;
@@ -36,6 +37,10 @@
 			}
 			
 			private function onBubbleClick(event:Event=null):void{
+				var ae:AnalyticsEvent = new AnalyticsEvent(AnalyticsEvent.TRACK_CLICK);
+				ae.action = 'Alert Window Clicked';
+				dispatcher.dispatchEvent(ae);
+				
 				var warfishURL:String = "http://warfish.net/war/play";
 				var urlRequest:URLRequest = new URLRequest(warfishURL);
 				navigateToURL(urlRequest);

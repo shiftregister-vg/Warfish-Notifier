@@ -4,6 +4,9 @@
 		 xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:mate="http://mate.asfusion.com/" xmlns:eventMaps="eventMaps.*">
 	<fx:Script>
 		<![CDATA[
+			import com.asfusion.mate.events.UnhandledFaultEvent;
+			
+			import events.AnalyticsEvent;
 			import events.AppEvent;
 			import events.ConfigEvent;
 			import events.IconMenuEvent;
@@ -24,6 +27,7 @@
 	</fx:Script>
 	<fx:Declarations>
 		
+		<eventMaps:AnalyticsEventMap />
 		<eventMaps:AlertEventMap />
 		<eventMaps:ConfigEventMap />
 		<eventMaps:IconMenuEventMap />
@@ -36,10 +40,17 @@
 		
 		<!-- handlers -->
 		<mate:EventHandlers type="{AppEvent.CREATION_COMPLETE}">
+			<mate:EventAnnouncer generator="{AnalyticsEvent}" type="{AnalyticsEvent.INIT}" />
 			<mate:EventAnnouncer generator="{IconMenuEvent}" type="{IconMenuEvent.BUILD_ICON_MENU}" />
 			<mate:EventAnnouncer generator="{UpdateManagerEvent}" type="{UpdateManagerEvent.AUTO_CHECK_FOR_UPDATE}" />
 			<mate:EventAnnouncer generator="{RequestManagerEvent}" type="{RequestManagerEvent.START_REQUEST_INTERVAL}" />
 			<mate:EventAnnouncer generator="{RequestManagerEvent}" type="{RequestManagerEvent.GET_TURNS_FEED}" />
+		</mate:EventHandlers>
+		
+		<mate:EventHandlers type="{UnhandledFaultEvent.FAULT}">
+			<mate:EventAnnouncer generator="{AnalyticsEvent}" type="{AnalyticsEvent.TRACK_ERROR}">
+				<mate:Properties error="{event.fault}" />
+			</mate:EventAnnouncer>
 		</mate:EventHandlers>
 		
 		

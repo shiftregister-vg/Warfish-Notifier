@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mate:EventMap xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" 
+			   xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:mate="http://mate.asfusion.com/">
+	<fx:Script>
+		<![CDATA[
+			import events.AnalyticsEvent;
+			
+			import managers.AnalyticsManager;
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		
+		<mate:Debugger level="{Debugger.ALL}" />
+		
+		<mate:EventHandlers type="{AnalyticsEvent.INIT}" debug="true">
+			<mate:MethodInvoker generator="{AnalyticsManager}" method="initAnalytics" />
+		</mate:EventHandlers>
+		
+		<mate:EventHandlers type="{AnalyticsEvent.TRACK_CLICK}" debug="true">
+			<mate:MethodInvoker generator="{AnalyticsManager}" method="trackClick" arguments="{event.action}" />
+		</mate:EventHandlers>
+		
+		<mate:EventHandlers type="{AnalyticsEvent.TRACK_ERROR}" debug="true">
+			<mate:MethodInvoker generator="{AnalyticsManager}" method="trackError" arguments="{event.error}" />
+		</mate:EventHandlers>
+		
+	</fx:Declarations>
+</mate:EventMap>
